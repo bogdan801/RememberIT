@@ -59,16 +59,20 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun NotesWindow(){
+    //context and focus manager
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
 
+    //current tab state
     var tabState by remember { mutableStateOf(0) }
 
+    //navigation tabs color states and animations
     var notesColorState by remember { mutableStateOf(Yellow) }
     var tasksColorState by remember { mutableStateOf(Color.Black) }
     val notesColor by animateColorAsState(targetValue = notesColorState, tween(durationMillis = 200))
     val tasksColor by animateColorAsState(targetValue = tasksColorState, tween(durationMillis = 200))
     
+    //top navigation tab panel with settings icon
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -134,6 +138,8 @@ fun NotesWindow(){
 
         }
 
+        
+        //search bar
         var searchBarTextState by remember { mutableStateOf("") }
         SearchBar(
             modifier = Modifier.fillMaxWidth(),
@@ -147,10 +153,51 @@ fun NotesWindow(){
                 focusManager.clearFocus()
             }
         )
+        
+        
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(0.8f)
+            .padding(top = 24.dp)
+            .background(if(tabState==0)Yellow else Gray80)
+
+        )
+
+
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ){
+            Surface(
+                modifier = Modifier
+                    .size(70.dp)
+                    //.offset(y = (-24).dp)
+                    .clickable {
+                        Toast
+                            .makeText(context, "puk", Toast.LENGTH_SHORT)
+                            .show()
+                    },
+                color = Yellow,
+                shape = CircleShape,
+                contentColor = Color.White,
+                elevation = 8.dp
+            ){
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center
+                ){
+                    Text(text = "+", modifier = Modifier
+                        .fillMaxWidth()
+                        .offset(y = (-10).dp), fontSize = 90.sp, textAlign = TextAlign.Center)
+                }
+            }
+        }
+
+
     }
 }
 
-
+//Search bar composable function
 @Composable
 fun SearchBar(
     modifier: Modifier = Modifier,
@@ -191,6 +238,7 @@ fun SearchBar(
     )
 }
 
+//preview
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
