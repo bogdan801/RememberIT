@@ -12,6 +12,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -28,12 +29,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bogdan801.rememberit.ui.theme.*
@@ -56,12 +60,12 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun NotesWindow(){
     val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
 
     var tabState by remember { mutableStateOf(0) }
 
     var notesColorState by remember { mutableStateOf(Yellow) }
     var tasksColorState by remember { mutableStateOf(Color.Black) }
-
     val notesColor by animateColorAsState(targetValue = notesColorState, tween(durationMillis = 200))
     val tasksColor by animateColorAsState(targetValue = tasksColorState, tween(durationMillis = 200))
     
@@ -71,7 +75,6 @@ fun NotesWindow(){
             .background(Gray10)
             .padding(start = 16.dp, end = 16.dp)
     ) {
-
         Box(modifier = Modifier.fillMaxWidth()){
             Row(
                 modifier = Modifier
@@ -123,7 +126,7 @@ fun NotesWindow(){
                         indication = rememberRipple(color = Yellow)
                     ) {
                         Toast
-                            .makeText(context, "puk", Toast.LENGTH_SHORT)
+                            .makeText(context, "Settings", Toast.LENGTH_SHORT)
                             .show()
                     }
                     .padding(10.dp)
@@ -132,39 +135,60 @@ fun NotesWindow(){
         }
 
         var searchBarTextState by remember { mutableStateOf("") }
-        TextField(
+        SearchBar(
+            modifier = Modifier.fillMaxWidth(),
             value = searchBarTextState,
             onValueChange = { newText->
                 searchBarTextState = newText
             },
-            keyboardActions = KeyboardActions(onSearch = {/*something*/}),
-            placeholder = {Text("Search notes", color = Gray40)},
-            singleLine = true,
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Filled.Search,
-                    contentDescription = "",
-                    tint = Gray40,
-                    modifier = Modifier
-                        .padding(start = 20.dp)
-                )
-            },
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Gray20,
-                textColor = Color.Black,
-                cursorColor = Gray40,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                leadingIconColor = Gray40
-            ),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(60.dp)
-                .padding(4.dp)
-                .clip(RoundedCornerShape(10.dp))
+            placeholder = {Text("Search " + if(tabState==0) "notes" else "tasks", color = Gray40)},
+            onSearch = {
+                Toast.makeText(context, "Searching $searchBarTextState...", Toast.LENGTH_SHORT).show()
+                focusManager.clearFocus()
+            }
         )
     }
+}
+
+
+@Composable
+fun SearchBar(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholder:  @Composable (() -> Unit)? = null,
+    height: Dp = 60.dp,
+    onSearch: (KeyboardActionScope.() -> Unit)? = null
+) {
+
+    TextField(
+        value = value,
+        onValueChange = onValueChange,
+        keyboardActions = KeyboardActions(onSearch = onSearch),
+        placeholder = placeholder,
+        singleLine = true,
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Filled.Search,
+                contentDescription = "",
+                tint = Gray40,
+                modifier = Modifier
+                    .padding(start = 20.dp)
+            )
+        },
+        colors = TextFieldDefaults.textFieldColors(
+            backgroundColor = Gray20,
+            textColor = Color.Black,
+            cursorColor = Gray40,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            leadingIconColor = Gray40
+        ),
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+        modifier = modifier
+            .height(height)
+            .clip(RoundedCornerShape(10.dp))
+    )
 }
 
 @Preview(showBackground = true)
