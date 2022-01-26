@@ -10,11 +10,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -27,12 +29,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -135,65 +139,66 @@ fun NotesWindow(){
                     }
                     .padding(10.dp)
             )
-
         }
 
-        
-        //search bar
-        var searchBarTextState by remember { mutableStateOf("") }
-        SearchBar(
-            modifier = Modifier.fillMaxWidth(),
-            value = searchBarTextState,
-            onValueChange = { newText->
-                searchBarTextState = newText
-            },
-            placeholder = {Text("Search " + if(tabState==0) "notes" else "tasks", color = Gray40)},
-            onSearch = {
-                Toast.makeText(context, "Searching $searchBarTextState...", Toast.LENGTH_SHORT).show()
-                focusManager.clearFocus()
-            }
-        )
-        
-        
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(0.8f)
-            .padding(top = 24.dp)
-            .background(if(tabState==0)Yellow else Gray80)
-
-        )
-
-
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ){
-            Surface(
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+        ) {
+            //search bar
+            var searchBarTextState by remember { mutableStateOf("") }
+            SearchBar(
                 modifier = Modifier
-                    .size(70.dp)
-                    //.offset(y = (-24).dp)
-                    .clickable {
-                        Toast
-                            .makeText(context, "puk", Toast.LENGTH_SHORT)
-                            .show()
-                    },
-                color = Yellow,
-                shape = CircleShape,
-                contentColor = Color.White,
-                elevation = 8.dp
-            ){
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center
-                ){
-                    Text(text = "+", modifier = Modifier
-                        .fillMaxWidth()
-                        .offset(y = (-10).dp), fontSize = 90.sp, textAlign = TextAlign.Center)
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                value = searchBarTextState,
+                onValueChange = { newText->
+                    searchBarTextState = newText
+                },
+                placeholder = {Text("Search " + if(tabState==0) "notes" else "tasks", color = Gray40)},
+                onSearch = {
+                    Toast.makeText(context, "Searching $searchBarTextState...", Toast.LENGTH_SHORT).show()
+                    focusManager.clearFocus()
                 }
+            )
+
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .height(1200.dp)
+                .background(
+                    brush =
+                        if(tabState==0) Brush.verticalGradient(0f to Yellow, 1000f to Color.White)
+                        else Brush.verticalGradient(0f to Color.White, 1000f to Yellow)
+                )
+            )
+
+            FloatingActionButton (
+                modifier = Modifier
+                    .padding(20.dp)
+                    .size(70.dp)
+                    .align(Alignment.CenterHorizontally),
+                onClick = {
+                    Toast
+                        .makeText(context, "puk", Toast.LENGTH_SHORT)
+                        .show()
+                },
+                shape = CircleShape,
+                backgroundColor = Yellow,
+                contentColor = Color.White
+            ) {
+                Text(
+                    text = "+",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .offset(y = (-14).dp),
+                    fontSize = 100.sp,
+                    fontFamily = fontFamily,
+                    fontWeight = FontWeight.Normal,
+                    textAlign = TextAlign.Center
+                )
             }
         }
-
-
     }
 }
 
@@ -204,7 +209,7 @@ fun SearchBar(
     value: String,
     onValueChange: (String) -> Unit,
     placeholder:  @Composable (() -> Unit)? = null,
-    height: Dp = 60.dp,
+    height: Dp = 55.dp,
     onSearch: (KeyboardActionScope.() -> Unit)? = null
 ) {
 
