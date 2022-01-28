@@ -19,7 +19,7 @@ val Typo = Typography(
         body1 = TextStyle(
                 fontFamily = fontFamily,
                 fontWeight = FontWeight.Normal,
-                fontSize = 24.sp
+                fontSize = 16.sp
         ),
         h1 = TextStyle(
                 fontFamily = fontFamily,
