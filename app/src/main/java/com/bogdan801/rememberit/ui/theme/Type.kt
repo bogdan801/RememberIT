@@ -17,9 +17,7 @@ val fontFamily = FontFamily(
 
 val Typo = Typography(
         body1 = TextStyle(
-                fontFamily = fontFamily,
-                fontWeight = FontWeight.Normal,
-                fontSize = 16.sp
+                fontSize = 14.sp
         ),
         h1 = TextStyle(
                 fontFamily = fontFamily,

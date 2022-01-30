@@ -7,6 +7,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.draggable
+import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -16,6 +19,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.ripple.rememberRipple
@@ -34,9 +38,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bogdan801.rememberit.ui.theme.*
+import kotlin.math.roundToInt
 import kotlin.random.Random
 
 class MainActivity : ComponentActivity() {
@@ -164,8 +170,9 @@ fun NotesWindow(){
                     }
                 )
 
+
                 StaggeredVerticalGrid {
-                    val cards = 20;
+                    val cards = 10;
                     for(i in 0..cards){
                         Card(
                             modifier = Modifier
@@ -174,11 +181,65 @@ fun NotesWindow(){
                             backgroundColor = Color.White,
                             shape = RoundedCornerShape(10.dp)
                         ) {
-                            Text(
-                                text = sampleText[Random.nextInt(sampleText.size-1)],
-                                color = Color.Black,
-                                modifier = Modifier.padding(16.dp)
-                            )
+                            Box(modifier = Modifier.fillMaxSize()){
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = 12.dp, bottom = 16.dp, start = 16.dp, end = 16.dp)
+                                ) {
+                                    Text(
+                                        text =  sampleText[Random.nextInt(sampleText.size)].split(" ")[0] + " " +
+                                                sampleText[Random.nextInt(sampleText.size)].split(" ")[1] + " " +
+                                                sampleText[Random.nextInt(sampleText.size)].split(" ")[2],
+                                        fontSize = 20.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Text(
+                                        text = sampleText[Random.nextInt(sampleText.size-1)],
+                                        modifier = Modifier.padding(top = 8.dp, bottom = 46.dp)
+                                    )
+                                }
+
+
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(1.dp)
+                                        .align(Alignment.BottomCenter)
+                                        .padding(horizontal = 16.dp)
+                                        .offset(y = (-50).dp)
+                                        .background(color = Gray20)
+                                )
+
+                                Text(
+                                    //text = "9:26pm\n30/01/2022",
+                                    text =
+                                    "${Random.nextInt(13)}:${"%02d".format(Random.nextInt(60))}${if(Random.nextBoolean())"am" else "pm"}\n" +
+                                    "${Random.nextInt(1,32)}/${Random.nextInt(1,13)}/202${Random.nextInt(3)}",
+                                    modifier = Modifier
+                                        .align(Alignment.BottomStart)
+                                        .padding(start = 16.dp, bottom = 12.dp),
+                                    fontSize = 12.sp,
+                                    color = Gray50
+                                )
+
+                                IconButton(
+                                    modifier = Modifier
+                                        .padding(4.dp)
+                                        .align(Alignment.BottomEnd),
+                                    onClick = {
+                                        Toast.makeText(context, "Deleting", Toast.LENGTH_SHORT).show()
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Delete,
+                                        contentDescription = "Delete icon",
+                                        modifier = Modifier.size(25.dp),
+                                        tint = Gray30
+                                    )
+                                }
+                            }
+
                         }
                     }
                 }
