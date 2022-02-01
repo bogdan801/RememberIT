@@ -7,9 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.draggable
-import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -38,11 +35,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.bogdan801.rememberit.ui.custom_composables.NoteCard
+import com.bogdan801.rememberit.ui.custom_composables.SearchBar
+import com.bogdan801.rememberit.ui.custom_composables.StaggeredVerticalGrid
 import com.bogdan801.rememberit.ui.theme.*
-import kotlin.math.roundToInt
+import kotlinx.datetime.LocalDateTime
+import java.time.Month
 import kotlin.random.Random
 
 class MainActivity : ComponentActivity() {
@@ -89,6 +89,7 @@ fun NotesWindow(){
             .background(Gray10)
             .padding(start = 8.dp, end = 8.dp)
     ) {
+        //navigation pannel
         Box(modifier = Modifier.fillMaxWidth()){
             Row(
                 modifier = Modifier
@@ -147,6 +148,7 @@ fun NotesWindow(){
             )
         }
 
+        //scrollable panel with searchbar nd notes or tasks
         Box(modifier = Modifier.fillMaxSize()){
             Column(
                 modifier = Modifier
@@ -170,10 +172,37 @@ fun NotesWindow(){
                     }
                 )
 
+                if(tabState == 0){
+                    //notes panel
+                    StaggeredVerticalGrid {
+                        val cards = 10;
+                        for(i in 0..cards){
+                            NoteCard(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(6.dp),
+                                titleText = sampleText[Random.nextInt(sampleText.size)].split(" ")[0] + " " +
+                                            sampleText[Random.nextInt(sampleText.size)].split(" ")[1] + " " +
+                                            sampleText[Random.nextInt(sampleText.size)].split(" ")[2],
+                                noteText =  sampleText[Random.nextInt(sampleText.size-1)],
+                                onDeleteClick = {
+                                    Toast.makeText(context, "Deleting", Toast.LENGTH_SHORT).show()
+                                },
+                                lastEditDateTime = LocalDateTime(
+                                    year = 2020,
+                                    month = Month.FEBRUARY,
+                                    dayOfMonth = 1,
+                                    hour = 16,
+                                    minute = 21
+                                )
+                            )
 
-                StaggeredVerticalGrid {
-                    val cards = 10;
-                    for(i in 0..cards){
+                        }
+                    }
+                }
+                else{
+                    val tasks = 10
+                    for (i in 0..tasks){
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -181,64 +210,10 @@ fun NotesWindow(){
                             backgroundColor = Color.White,
                             shape = RoundedCornerShape(10.dp)
                         ) {
-                            Box(modifier = Modifier.fillMaxSize()){
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(top = 12.dp, bottom = 16.dp, start = 16.dp, end = 16.dp)
-                                ) {
-                                    Text(
-                                        text =  sampleText[Random.nextInt(sampleText.size)].split(" ")[0] + " " +
-                                                sampleText[Random.nextInt(sampleText.size)].split(" ")[1] + " " +
-                                                sampleText[Random.nextInt(sampleText.size)].split(" ")[2],
-                                        fontSize = 20.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                    Text(
-                                        text = sampleText[Random.nextInt(sampleText.size-1)],
-                                        modifier = Modifier.padding(top = 8.dp, bottom = 46.dp)
-                                    )
-                                }
-
-
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(1.dp)
-                                        .align(Alignment.BottomCenter)
-                                        .padding(horizontal = 16.dp)
-                                        .offset(y = (-50).dp)
-                                        .background(color = Gray20)
-                                )
-
-                                Text(
-                                    //text = "9:26pm\n30/01/2022",
-                                    text =
-                                    "${Random.nextInt(13)}:${"%02d".format(Random.nextInt(60))}${if(Random.nextBoolean())"am" else "pm"}\n" +
-                                    "${Random.nextInt(1,32)}/${Random.nextInt(1,13)}/202${Random.nextInt(3)}",
-                                    modifier = Modifier
-                                        .align(Alignment.BottomStart)
-                                        .padding(start = 16.dp, bottom = 12.dp),
-                                    fontSize = 12.sp,
-                                    color = Gray50
-                                )
-
-                                IconButton(
-                                    modifier = Modifier
-                                        .padding(4.dp)
-                                        .align(Alignment.BottomEnd),
-                                    onClick = {
-                                        Toast.makeText(context, "Deleting", Toast.LENGTH_SHORT).show()
-                                    }
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Delete,
-                                        contentDescription = "Delete icon",
-                                        modifier = Modifier.size(25.dp),
-                                        tint = Gray30
-                                    )
-                                }
-                            }
+                            Text(
+                                text = sampleText[0],
+                                modifier = Modifier.padding(16.dp)
+                            )
 
                         }
                     }
@@ -247,6 +222,7 @@ fun NotesWindow(){
                 Spacer(modifier = Modifier.height(100.dp))
             }
 
+            //add button
             FloatingActionButton (
                 modifier = Modifier
                     .padding(20.dp)
@@ -265,7 +241,7 @@ fun NotesWindow(){
                     text = "+",
                     modifier = Modifier
                         .fillMaxWidth()
-                        .offset(y = (-15).dp),
+                        .offset(y = (-16).dp),
                     fontSize = 100.sp,
                     fontFamily = fontFamily,
                     fontWeight = FontWeight.Normal,
@@ -274,47 +250,6 @@ fun NotesWindow(){
             }
         }
     }
-}
-
-//Search bar composable function
-@Composable
-fun SearchBar(
-    modifier: Modifier = Modifier,
-    value: String,
-    onValueChange: (String) -> Unit,
-    placeholder:  @Composable (() -> Unit)? = null,
-    height: Dp = 55.dp,
-    onSearch: (KeyboardActionScope.() -> Unit)? = null
-) {
-
-    TextField(
-        value = value,
-        onValueChange = onValueChange,
-        keyboardActions = KeyboardActions(onSearch = onSearch),
-        placeholder = placeholder,
-        singleLine = true,
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Filled.Search,
-                contentDescription = "",
-                tint = Gray40,
-                modifier = Modifier
-                    .padding(start = 20.dp)
-            )
-        },
-        colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = Gray20,
-            textColor = Color.Black,
-            cursorColor = Gray40,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            leadingIconColor = Gray40
-        ),
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-        modifier = modifier
-            .height(height)
-            .clip(RoundedCornerShape(10.dp))
-    )
 }
 
 //preview

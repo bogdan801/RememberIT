@@ -1,4 +1,4 @@
-package com.bogdan801.rememberit
+package com.bogdan801.rememberit.ui.custom_composables
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
