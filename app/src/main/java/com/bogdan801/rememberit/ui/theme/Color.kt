@@ -16,4 +16,5 @@ val Gray30 = Color(0xFFD5D5D5)
 val Gray40 = Color(0xFFBABABA)
 val Gray50 = Color(0xFFB3B3B3)
 val Gray80 = Color(0xFF555555)
+val RedError = Color(0xFFBB0000)
 

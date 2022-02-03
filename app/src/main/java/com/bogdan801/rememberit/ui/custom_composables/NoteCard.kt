@@ -16,7 +16,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.bogdan801.rememberit.ui.theme.Gray20
 import com.bogdan801.rememberit.ui.theme.Gray30
 import com.bogdan801.rememberit.ui.theme.Gray50
 import kotlinx.datetime.LocalDateTime
@@ -65,7 +64,7 @@ fun NoteCard(
                     .align(Alignment.BottomCenter)
                     .padding(horizontal = 16.dp)
                     .offset(y = (-50).dp)
-                    .background(color = Gray20)
+                    .background(color = Gray30)
             )
 
             //bottom part with the date and delete button
