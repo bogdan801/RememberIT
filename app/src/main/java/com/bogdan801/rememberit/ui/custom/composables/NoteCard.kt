@@ -1,6 +1,7 @@
-package com.bogdan801.rememberit.ui.custom_composables
+package com.bogdan801.rememberit.ui.custom.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -25,6 +26,7 @@ fun NoteCard(
     modifier: Modifier = Modifier,
     titleText: String = "",
     noteText: String = "",
+    onClick: () -> Unit = {},
     onDeleteClick: () -> Unit,
     lastEditDateTime: LocalDateTime
 ){
@@ -33,7 +35,7 @@ fun NoteCard(
         backgroundColor = Color.White,
         shape = RoundedCornerShape(10.dp)
     ) {
-        Box(modifier = Modifier.fillMaxSize()){
+        Box(modifier = Modifier.fillMaxSize().clickable(onClick = onClick)){
             //title and contents
             Column(
                 modifier = Modifier

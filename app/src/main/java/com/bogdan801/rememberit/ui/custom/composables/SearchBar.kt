@@ -1,4 +1,4 @@
-package com.bogdan801.rememberit.ui.custom_composables
+package com.bogdan801.rememberit.ui.custom.composables
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding

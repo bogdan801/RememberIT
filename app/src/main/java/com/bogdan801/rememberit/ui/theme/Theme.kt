@@ -37,7 +37,7 @@ fun RememberITTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Compos
 
     MaterialTheme(
             colors = colors,
-            typography = Typo,
+            typography = Typography,
             shapes = Shapes,
             content = content
     )

@@ -1,8 +1,9 @@
-package com.bogdan801.rememberit.ui.custom_composables
+package com.bogdan801.rememberit.ui.custom.composables
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -27,6 +28,7 @@ fun TaskCard(
     text: String = "",
     dueToDateTime: LocalDateTime,
     onCheckedChange: ((Boolean) -> Unit)? = null,
+    onClick: () -> Unit = {},
     onDeleteClick: () -> Unit,
     isDone: MutableState<Boolean> = remember {mutableStateOf(false)}
 ){
@@ -45,6 +47,7 @@ fun TaskCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
+                .clickable(onClick = onClick)
                 .padding(8.dp)
                 .height(IntrinsicSize.Min),
             verticalAlignment = Alignment.CenterVertically

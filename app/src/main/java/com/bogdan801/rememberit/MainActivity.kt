@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -29,13 +27,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.bogdan801.rememberit.ui.custom_composables.NoteCard
-import com.bogdan801.rememberit.ui.custom_composables.SearchBar
-import com.bogdan801.rememberit.ui.custom_composables.StaggeredVerticalGrid
-import com.bogdan801.rememberit.ui.custom_composables.TaskCard
+import com.bogdan801.rememberit.tools.interpolateColor
+import com.bogdan801.rememberit.ui.custom.composables.NoteCard
+import com.bogdan801.rememberit.ui.custom.composables.SearchBar
+import com.bogdan801.rememberit.ui.custom.composables.TaskCard
+import com.bogdan801.rememberit.ui.custom.layouts.StaggeredVerticalGrid
 import com.bogdan801.rememberit.ui.theme.*
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
-import java.time.Month
+import kotlinx.datetime.Month
 import kotlin.random.Random
 
 class MainActivity : ComponentActivity() {
@@ -51,15 +54,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-val sampleText = listOf(
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Viverra adipiscing at in tellus integer feugiat. Feugiat in ante metus dictum. Elit ut aliquam purus sit amet luctus. Nunc faucibus a pellentesque sit. Phasellus vestibulum lorem sed risus ultricies tristique.",
-    "Augue ut lectus arcu bibendum at varius. Ut diam quam nulla porttitor massa id neque aliquam vestibulum.",
-    "Tincidunt vitae semper quis lectus nulla at volutpat diam. Molestie a iaculis at erat pellentesque adipiscing commodo elit. Porttitor lacus luctus accumsan tortor posuere. Id interdum velit laoreet id donec ultrices tincidunt arcu non. Id aliquet risus feugiat in ante metus dictum at tempor.",
-    "Rutrum tellus pellentesque eu tincidunt tortor aliquam.",
-    "Risus ultricies tristique nulla aliquet enim tortor at auctor urna. Malesuada bibendum arcu vitae elementum curabitur vitae nunc sed velit. Maecenas volutpat blandit aliquam etiam. Vitae purus faucibus ornare suspendisse sed. Dignissim suspendisse in est ante in. Lacus laoreet non curabitur gravida. Adipiscing bibendum est ultricies integer quis auctor. ",
-    "Nisl tincidunt eget nullam non nisi est sit. Consectetur lorem donec massa sapien faucibus et molestie ac. Eget nullam non nisi est sit amet facilisis. Sit amet mauris commodo quis. Eget arcu dictum varius duis at consectetur lorem donec massa."
-)
-
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun NotesWindow(){
     //context and focus manager
@@ -67,14 +62,14 @@ fun NotesWindow(){
     val focusManager = LocalFocusManager.current
 
     //current tab state
-    var tabState by remember { mutableStateOf(0) }
+    val tabState by remember { mutableStateOf(0) }
+    val pageState = rememberPagerState(pageCount = 2)
+    val scope = rememberCoroutineScope()
 
     //navigation tabs color states and animations
     var notesColorState by remember { mutableStateOf(Yellow) }
     var tasksColorState by remember { mutableStateOf(Color.Black) }
-    val notesColor by animateColorAsState(targetValue = notesColorState, tween(durationMillis = 200))
-    val tasksColor by animateColorAsState(targetValue = tasksColorState, tween(durationMillis = 200))
-    
+
     //top navigation tab panel with settings icon
     Column(
         modifier = Modifier
@@ -98,12 +93,12 @@ fun NotesWindow(){
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null
                         ) {
-                            tabState = 0
-                            notesColorState = Yellow
-                            tasksColorState = Color.Black
+                            scope.launch {
+                                pageState.animateScrollToPage(0)
+                            }
                         },
-                    style = Typo.h1,
-                    color = notesColor
+                    style = Typography.h1,
+                    color = notesColorState
                 )
                 Text (
                     text = "Tasks",
@@ -112,12 +107,12 @@ fun NotesWindow(){
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null
                         ) {
-                            tabState = 1
-                            notesColorState = Color.Black
-                            tasksColorState = Yellow
+                            scope.launch {
+                                pageState.animateScrollToPage(1)
+                            }
                         },
-                    style = Typo.h1,
-                    color = tasksColor,
+                    style = Typography.h1,
+                    color = tasksColorState,
                 )
             }
 
@@ -141,80 +136,92 @@ fun NotesWindow(){
             )
         }
 
-        //scrollable panel with searchbar аnd notes or tasks
-        Box(modifier = Modifier.fillMaxSize()){
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-            ) {
-                //search bar
-                var searchBarTextState by remember { mutableStateOf("") }
-                SearchBar(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 6.dp, end = 6.dp, top = 8.dp, bottom = 8.dp),
-                    value = searchBarTextState,
-                    onValueChange = { newText->
-                        searchBarTextState = newText
-                    },
-                    placeholder = {Text("Search " + if(tabState==0) "notes" else "tasks", color = Gray40)},
-                    onSearch = {
-                        Toast.makeText(context, "Searching $searchBarTextState...", Toast.LENGTH_SHORT).show()
-                        focusManager.clearFocus()
-                    }
-                )
+        //search bar
+        var searchBarTextState by remember { mutableStateOf("") }
+        var searchPlaceholderState by remember { mutableStateOf("Search notes")}
+        SearchBar(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 6.dp, end = 6.dp, top = 4.dp, bottom = 10.dp),
+            value = searchBarTextState,
+            onValueChange = { newText->
+                searchBarTextState = newText
+            },
+            placeholder = {Text(searchPlaceholderState, color = Gray40)},
+            onSearch = {
+                Toast.makeText(context, "Searching $searchBarTextState...", Toast.LENGTH_SHORT).show()
+                focusManager.clearFocus()
+            }
+        )
 
-                if(tabState == 0){
-                    //notes panel
-                    StaggeredVerticalGrid {
-                        val cards = 10
-                        for(i in 0..cards){
-                            NoteCard(
+        //scrollable panel with notes or tasks
+        Box(modifier = Modifier.fillMaxSize()){
+            HorizontalPager(
+                modifier = Modifier.fillMaxSize(),
+                verticalAlignment = Alignment.Top,
+                state = pageState
+            ) { index ->
+                notesColorState = interpolateColor(Yellow, Color.Black, pageState.currentPageOffset + pageState.currentPage)
+                tasksColorState = interpolateColor(Color.Black, Yellow, pageState.currentPageOffset + pageState.currentPage)
+
+                if (pageState.currentPage == 0) searchPlaceholderState = "Search notes"
+                if (pageState.currentPage == 1) searchPlaceholderState = "Search tasks"
+
+
+                when(index){
+                    0 -> {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .verticalScroll(rememberScrollState())
+                        ) {
+                            StaggeredVerticalGrid {
+                                NoteCard(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(6.dp),
+                                    titleText = "Hgdeyugf shd s twd hdhddc",
+                                    noteText =  "Rdfof yhy hyhjh de feu sjhhg ddskf sef essiuefhhs dfuseye fyu",
+                                    onClick = {Toast.makeText(context, "Editing", Toast.LENGTH_SHORT).show()},
+                                    onDeleteClick = {Toast.makeText(context, "Deleting", Toast.LENGTH_SHORT).show()},
+                                    lastEditDateTime = LocalDateTime(
+                                        year = 2020,
+                                        month = Month.FEBRUARY,
+                                        dayOfMonth = 1,
+                                        hour = 16,
+                                        minute = 21
+                                    )
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(100.dp))
+                        }
+                    }
+                    1 -> {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .verticalScroll(rememberScrollState())
+                        ) {
+                            TaskCard(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(6.dp),
-                                titleText = sampleText[Random.nextInt(sampleText.size)].split(" ")[0] + " " +
-                                            sampleText[Random.nextInt(sampleText.size)].split(" ")[1] + " " +
-                                            sampleText[Random.nextInt(sampleText.size)].split(" ")[2],
-                                noteText =  sampleText[Random.nextInt(sampleText.size-1)],
-                                onDeleteClick = {
-                                    Toast.makeText(context, "Deleting", Toast.LENGTH_SHORT).show()
-                                },
-                                lastEditDateTime = LocalDateTime(
-                                    year = 2020,
-                                    month = Month.FEBRUARY,
-                                    dayOfMonth = 1,
-                                    hour = 16,
-                                    minute = 21
-                                )
+                                    .padding(horizontal = 6.dp, vertical = 4.dp),
+                                text = "Доробити нарешті цей додаток",
+                                dueToDateTime = LocalDateTime(
+                                    year = 2022,
+                                    month = Month.MARCH,
+                                    dayOfMonth = 3,
+                                    hour = 15,
+                                    minute = 5
+                                ),
+                                onClick = {Toast.makeText(context, "Editing", Toast.LENGTH_SHORT).show()},
+                                onDeleteClick = {Toast.makeText(context, "Deleting", Toast.LENGTH_SHORT).show()},
+                                onCheckedChange = {Toast.makeText(context, "Checked: $it", Toast.LENGTH_SHORT).show()}
                             )
-
+                            Spacer(modifier = Modifier.height(100.dp))
                         }
                     }
                 }
-                else{
-                    val tasks = 10
-                    for (i in 0..tasks){
-                        TaskCard(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 6.dp, vertical = 4.dp),
-                            text = "Доробити нарешті цей додаток",
-                            dueToDateTime = LocalDateTime(
-                                year = 2022,
-                                month = Month.MARCH,
-                                dayOfMonth = 3,
-                                hour = 15,
-                                minute = 5
-                            ),
-                            onDeleteClick = {Toast.makeText(context, "Deleting", Toast.LENGTH_SHORT).show()},
-                            onCheckedChange = {Toast.makeText(context, "Checked: $it", Toast.LENGTH_SHORT).show()}
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(100.dp))
             }
 
             //add button
@@ -238,7 +245,7 @@ fun NotesWindow(){
                         .fillMaxWidth()
                         .offset(y = (-16).dp),
                     fontSize = 100.sp,
-                    fontFamily = fontFamily,
+                    fontFamily = dongleFontFamily,
                     fontWeight = FontWeight.Normal,
                     textAlign = TextAlign.Center
                 )
