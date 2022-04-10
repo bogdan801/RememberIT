@@ -9,7 +9,6 @@ val Teal200 = Color(0xFF03DAC5)
 
 
 val Yellow = Color(0xFFFDBE00)
-val Gray5 = Color(0xFFFEFEFE)
 val Gray10 = Color(0xFFF7F7F7)
 val Gray20 = Color(0xFFEDEDED)
 val Gray30 = Color(0xFFD5D5D5)

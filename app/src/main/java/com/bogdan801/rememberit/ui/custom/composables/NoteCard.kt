@@ -14,11 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.bogdan801.rememberit.ui.theme.Gray30
 import com.bogdan801.rememberit.ui.theme.Gray50
+import com.bogdan801.rememberit.ui.theme.Typography
 import kotlinx.datetime.LocalDateTime
 
 @Composable
@@ -49,12 +48,11 @@ fun NoteCard(
             ) {
                 Text(
                     text = titleText,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
+                    style = Typography.h3
                 )
                 Text(
                     text = noteText,
-                    modifier = Modifier.padding(top = 8.dp, bottom = 46.dp)
+                    modifier = Modifier.padding(bottom = 42.dp)
                 )
             }
 
@@ -77,7 +75,7 @@ fun NoteCard(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .padding(start = 16.dp, bottom = 12.dp),
-                fontSize = 12.sp,
+                style = Typography.h6,
                 color = Gray50
             )
 

@@ -14,23 +14,37 @@ val dongleFontFamily = FontFamily(
         Font(R.font.dongle_light, weight = FontWeight.Light),
 )
 
+val visbyRoundFontFamily = FontFamily(
+        Font(R.font.visby_round_bold, weight = FontWeight.Bold),
+)
+
 val Typography = Typography(
         body1 = TextStyle(
                 fontSize = 14.sp
         ),
         h1 = TextStyle(
-                fontFamily = dongleFontFamily,
-                fontWeight = FontWeight.Normal,
-                fontSize = 42.sp
+                fontSize = 70.sp
         ),
         h2 = TextStyle(
-                fontFamily = dongleFontFamily,
-                fontWeight = FontWeight.Normal,
-                fontSize = 32.sp
+                fontFamily = visbyRoundFontFamily,
+                fontWeight = FontWeight.Bold,
+                fontSize = 26.sp
         ),
         h3 = TextStyle(
-                fontFamily = dongleFontFamily,
+                fontFamily = visbyRoundFontFamily,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp
+        ),
+        h4 = TextStyle(
                 fontWeight = FontWeight.Normal,
-                fontSize = 14.sp
+                fontSize = 18.sp
+        ),
+        h5 = TextStyle(
+                fontWeight = FontWeight.Normal,
+                fontSize = 16.sp
+        ),
+        h6 = TextStyle(
+                fontWeight = FontWeight.Normal,
+                fontSize = 12.sp
         )
 )

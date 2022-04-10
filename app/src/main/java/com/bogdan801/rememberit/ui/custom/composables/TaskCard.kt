@@ -57,7 +57,7 @@ fun TaskCard(
                 modifier = Modifier
                     .fillMaxWidth(0.7f)
                     .padding(8.dp),
-                fontSize = 18.sp,
+                style = Typography.h4,
                 color = Gray80
             )
             Box(modifier = Modifier.fillMaxSize()) {
@@ -77,7 +77,7 @@ fun TaskCard(
                     modifier = Modifier
                         .align(Alignment.TopStart)
                         .padding(8.dp),
-                    fontSize = 12.sp,
+                    style = Typography.h6,
                     color = dueToColor
                 )
                 Text(
@@ -86,7 +86,7 @@ fun TaskCard(
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         .padding(top = 8.dp),
-                    fontSize = 12.sp,
+                    style = Typography.h6,
                     color = dueToColor,
                     textAlign = TextAlign.End
                 )
