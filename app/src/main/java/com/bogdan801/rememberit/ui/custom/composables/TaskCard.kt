@@ -33,9 +33,12 @@ fun TaskCard(
     isDone: MutableState<Boolean> = remember {mutableStateOf(false)}
 ){
     val currentDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-    val dueToColor = if(currentDateTime>dueToDateTime) RedError else Gray30
+    val dueToColor = if(currentDateTime>dueToDateTime) MaterialTheme.colors.error else MaterialTheme.colors.primaryVariant
 
-    var cardColorState by remember { mutableStateOf(Color.White) }
+    val primary = MaterialTheme.colors.primary
+    val onBackground = MaterialTheme.colors.onBackground
+
+    var cardColorState by remember { mutableStateOf(primary) }
     val cardColor by animateColorAsState(targetValue = cardColorState, tween(durationMillis = 200))
     Card(
         modifier = modifier
@@ -58,7 +61,7 @@ fun TaskCard(
                     .fillMaxWidth(0.7f)
                     .padding(8.dp),
                 style = Typography.h4,
-                color = Gray80
+                color = MaterialTheme.colors.onPrimary
             )
             Box(modifier = Modifier.fillMaxSize()) {
                 //line spacer
@@ -68,7 +71,7 @@ fun TaskCard(
                         .width(1.dp)
                         .padding(vertical = 8.dp)
                         .align(Alignment.CenterStart)
-                        .background(color = Gray30)
+                        .background(color = MaterialTheme.colors.primaryVariant)
                 )
 
                 //due to date time
@@ -97,10 +100,10 @@ fun TaskCard(
                     checked = isDone.value,
                     onCheckedChange = {
                         isDone.value = !isDone.value
-                        cardColorState = if(isDone.value) Gray20 else Color.White
+                        cardColorState = if(isDone.value) onBackground else primary
                         onCheckedChange?.invoke(it)
                     },
-                    colors = CheckboxDefaults.colors(Yellow)
+                    colors = CheckboxDefaults.colors(MaterialTheme.colors.secondary)
                 )
 
                 //delete button
@@ -114,7 +117,7 @@ fun TaskCard(
                         imageVector = Icons.Filled.Delete,
                         contentDescription = "Delete icon",
                         modifier = Modifier.size(25.dp),
-                        tint = Gray30
+                        tint = MaterialTheme.colors.primaryVariant
                     )
                 }
             }

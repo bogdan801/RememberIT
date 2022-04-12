@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
@@ -27,10 +28,7 @@ import com.bogdan801.rememberit.ui.custom.composables.NoteCard
 import com.bogdan801.rememberit.ui.custom.composables.SearchBar
 import com.bogdan801.rememberit.ui.custom.composables.TaskCard
 import com.bogdan801.rememberit.ui.custom.layouts.StaggeredVerticalGrid
-import com.bogdan801.rememberit.ui.theme.Gray10
-import com.bogdan801.rememberit.ui.theme.Gray40
-import com.bogdan801.rememberit.ui.theme.Typography
-import com.bogdan801.rememberit.ui.theme.Yellow
+import com.bogdan801.rememberit.ui.theme.*
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -51,14 +49,16 @@ fun NotesWindow(){
     val scope = rememberCoroutineScope()
 
     //navigation tabs color states and animations
-    var notesColorState by remember { mutableStateOf(Yellow) }
-    var tasksColorState by remember { mutableStateOf(Color.Black) }
+    val secondary = MaterialTheme.colors.secondary
+    val onPrimary = MaterialTheme.colors.onPrimary
+    var notesColorState by remember { mutableStateOf(secondary) }
+    var tasksColorState by remember { mutableStateOf(onPrimary) }
 
     //top navigation tab panel with settings icon
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Gray10)
+            .background(MaterialTheme.colors.background)
             .padding(start = 8.dp, end = 8.dp)
     ) {
         //navigation panel
@@ -107,13 +107,13 @@ fun NotesWindow(){
             Icon(
                 imageVector = Icons.Filled.Settings,
                 contentDescription = null,
-                tint = Yellow,
+                tint = MaterialTheme.colors.secondary,
                 modifier = Modifier
                     .size(42.dp)
                     .clip(CircleShape)
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
-                        indication = rememberRipple(color = Yellow)
+                        indication = rememberRipple(color = MaterialTheme.colors.secondary)
                     ) {
                         Toast
                             .makeText(context, "Settings", Toast.LENGTH_SHORT)
@@ -135,7 +135,7 @@ fun NotesWindow(){
             onValueChange = { newText->
                 searchBarTextState = newText
             },
-            placeholder = { Text(searchPlaceholderState, style = Typography.h5, color = Gray40) },
+            placeholder = { Text(searchPlaceholderState, style = Typography.h5, color = MaterialTheme.colors.onSurface) },
             onSearch = {
                 Toast.makeText(context, "Searching $searchBarTextState...", Toast.LENGTH_SHORT).show()
                 focusManager.clearFocus()
@@ -149,8 +149,8 @@ fun NotesWindow(){
                 verticalAlignment = Alignment.Top,
                 state = pageState
             ) { index ->
-                notesColorState = interpolateColor(Yellow, Color.Black, pageState.currentPageOffset + pageState.currentPage)
-                tasksColorState = interpolateColor(Color.Black, Yellow, pageState.currentPageOffset + pageState.currentPage)
+                notesColorState = interpolateColor(MaterialTheme.colors.secondary, MaterialTheme.colors.onPrimary, pageState.currentPageOffset + pageState.currentPage)
+                tasksColorState = interpolateColor(MaterialTheme.colors.onPrimary, MaterialTheme.colors.secondary, pageState.currentPageOffset + pageState.currentPage)
 
                 if (pageState.currentPage == 0) searchPlaceholderState = "Search notes"
                 if (pageState.currentPage == 1) searchPlaceholderState = "Search tasks"
@@ -197,10 +197,10 @@ fun NotesWindow(){
                                 text = "Доробити нарешті цей додаток",
                                 dueToDateTime = LocalDateTime(
                                     year = 2022,
-                                    month = Month.MARCH,
-                                    dayOfMonth = 3,
-                                    hour = 15,
-                                    minute = 5
+                                    month = Month.MAY,
+                                    dayOfMonth = 12,
+                                    hour = 10,
+                                    minute = 31
                                 ),
                                 onClick = { Toast.makeText(context, "Editing", Toast.LENGTH_SHORT).show()},
                                 onDeleteClick = { Toast.makeText(context, "Deleting", Toast.LENGTH_SHORT).show()},
@@ -219,12 +219,12 @@ fun NotesWindow(){
                     modifier = Modifier.align(Alignment.Center).size(70.dp),
                     onClick = { Toast.makeText(context, "click", Toast.LENGTH_SHORT).show()},
                     shape = CircleShape,
-                    backgroundColor = Yellow
+                    backgroundColor = MaterialTheme.colors.secondary
                 ){}
                 Text(
                     text = "+",
                     modifier = Modifier.align(Alignment.Center).offset(y = (-2).dp),
-                    color = Color.White,
+                    color = MaterialTheme.colors.primary,
                     style = Typography.h1
                 )
             }

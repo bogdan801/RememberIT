@@ -4,19 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.bogdan801.rememberit.ui.theme.Gray30
-import com.bogdan801.rememberit.ui.theme.Gray50
 import com.bogdan801.rememberit.ui.theme.Typography
 import kotlinx.datetime.LocalDateTime
 
@@ -31,7 +25,7 @@ fun NoteCard(
 ){
     Card(
         modifier = modifier,
-        backgroundColor = Color.White,
+        backgroundColor = MaterialTheme.colors.primary,
         shape = RoundedCornerShape(10.dp)
     ) {
         Box(modifier = Modifier.fillMaxSize().clickable(onClick = onClick)){
@@ -48,11 +42,13 @@ fun NoteCard(
             ) {
                 Text(
                     text = titleText,
-                    style = Typography.h3
+                    style = Typography.h3,
+                    color = MaterialTheme.colors.onPrimary
                 )
                 Text(
                     text = noteText,
-                    modifier = Modifier.padding(bottom = 42.dp)
+                    modifier = Modifier.padding(bottom = 42.dp),
+                    color = MaterialTheme.colors.onPrimary
                 )
             }
 
@@ -64,7 +60,7 @@ fun NoteCard(
                     .align(Alignment.BottomCenter)
                     .padding(horizontal = 16.dp)
                     .offset(y = (-50).dp)
-                    .background(color = Gray30)
+                    .background(color = MaterialTheme.colors.primaryVariant)
             )
 
             //bottom part with the date and delete button
@@ -76,7 +72,7 @@ fun NoteCard(
                     .align(Alignment.BottomStart)
                     .padding(start = 16.dp, bottom = 12.dp),
                 style = Typography.h6,
-                color = Gray50
+                color = MaterialTheme.colors.primaryVariant
             )
 
             //delete button
@@ -90,7 +86,7 @@ fun NoteCard(
                     imageVector = Icons.Filled.Delete,
                     contentDescription = "Delete icon",
                     modifier = Modifier.size(25.dp),
-                    tint = Gray30
+                    tint = MaterialTheme.colors.primaryVariant
                 )
             }
         }
