@@ -23,7 +23,7 @@ val Typography = Typography(
                 fontSize = 14.sp
         ),
         h1 = TextStyle(
-                fontSize = 70.sp
+                fontSize = 26.sp
         ),
         h2 = TextStyle(
                 fontFamily = visbyRoundFontFamily,
@@ -46,5 +46,8 @@ val Typography = Typography(
         h6 = TextStyle(
                 fontWeight = FontWeight.Bold,
                 fontSize = 12.sp
+        ),
+        button = TextStyle(
+                fontSize = 70.sp
         )
 )

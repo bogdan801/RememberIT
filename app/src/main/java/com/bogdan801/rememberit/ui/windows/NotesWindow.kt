@@ -225,7 +225,7 @@ fun NotesWindow(){
                     text = "+",
                     modifier = Modifier.align(Alignment.Center).offset(y = (-2).dp),
                     color = MaterialTheme.colors.primary,
-                    style = Typography.h1
+                    style = Typography.button
                 )
             }
         }
