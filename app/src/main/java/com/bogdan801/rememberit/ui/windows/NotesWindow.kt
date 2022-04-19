@@ -213,7 +213,6 @@ fun NotesWindow(){
             }
 
             //add button
-
             Box(modifier = Modifier.size(150.dp).align(Alignment.BottomCenter).padding(bottom = 20.dp)){
                 FloatingActionButton (
                     modifier = Modifier.align(Alignment.Center).size(70.dp),
@@ -225,7 +224,7 @@ fun NotesWindow(){
                     text = "+",
                     modifier = Modifier.align(Alignment.Center).offset(y = (-2).dp),
                     color = MaterialTheme.colors.primary,
-                    style = Typography.button
+                    style = Typography.subtitle1
                 )
             }
         }

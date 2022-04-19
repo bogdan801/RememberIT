@@ -19,6 +19,7 @@ import com.bogdan801.rememberit.ui.theme.Typography
 
 @Composable
 fun TopAppBar(
+    modifier: Modifier = Modifier,
     title: String,
     onBackClick: ()->Unit = {},
     showUndoRedo: Boolean = true,
@@ -28,7 +29,7 @@ fun TopAppBar(
     isRedoActive: Boolean = false
 ){
     //background panel
-    Box(modifier = Modifier
+    Box(modifier = modifier
         .fillMaxWidth()
         .height(80.dp)
         .background(MaterialTheme.colors.primary),
@@ -110,6 +111,6 @@ fun TopAppBar(
 
 @Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
-    TopAppBar("Create note")
+fun TopAppBarPreview() {
+    TopAppBar(title = "Create note")
 }
