@@ -8,12 +8,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.bogdan801.rememberit.R
 
-val dongleFontFamily = FontFamily(
-        Font(R.font.dongle_regular, weight = FontWeight.Normal),
-        Font(R.font.dongle_bold, weight = FontWeight.Bold),
-        Font(R.font.dongle_light, weight = FontWeight.Light),
-)
-
 val visbyRoundFontFamily = FontFamily(
         Font(R.font.visby_round_bold, weight = FontWeight.Bold),
 )
@@ -21,6 +15,10 @@ val visbyRoundFontFamily = FontFamily(
 val Typography = Typography(
         body1 = TextStyle(
                 fontSize = 14.sp
+        ),
+        body2 = TextStyle(
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp,
         ),
         h1 = TextStyle(
                 fontSize = 26.sp

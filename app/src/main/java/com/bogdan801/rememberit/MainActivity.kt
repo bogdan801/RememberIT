@@ -18,7 +18,9 @@ class MainActivity : ComponentActivity() {
             RememberITTheme {
                 Surface(color = MaterialTheme.colors.background) {
                     //NotesWindow()
-                    AddNoteWindow()
+                    //AddNoteWindow()
+                    //AddTaskWindow()
+                    SettingsWindow()
                 }
             }
         }
@@ -30,5 +32,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     //NotesWindow()
-    AddNoteWindow()
+    //AddNoteWindow()
+    //AddTaskWindow()
+    SettingsWindow()
 }

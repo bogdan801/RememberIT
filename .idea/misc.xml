@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/projects/RememberIT/app/src/main/res/drawable/ic_night_mode.xml" value="0.192" />
+        <entry key="..\:/projects/RememberIT/app/src/main/res/drawable/ic_palette.xml" value="0.192" />
         <entry key="..\:/projects/RememberIT/app/src/main/res/drawable/ic_redo.xml" value="0.109" />
         <entry key="..\:/projects/RememberIT/app/src/main/res/drawable/ic_undo.xml" value="0.109" />
       </map>
