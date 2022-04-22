@@ -2,7 +2,6 @@ package com.bogdan801.rememberit.ui.windows
 
 import android.widget.Toast
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -11,12 +10,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.bogdan801.rememberit.R
 import com.bogdan801.rememberit.ui.custom.composables.CustomSwitch
 import com.bogdan801.rememberit.ui.custom.composables.SettingsItem
@@ -32,6 +29,7 @@ fun SettingsWindow(){
         .fillMaxSize()
         .background(MaterialTheme.colors.background)
     ){
+        //top app bar
         TopAppBar(
             title = "Settings",
             onBackClick = {
@@ -40,10 +38,12 @@ fun SettingsWindow(){
             showUndoRedo = false
         )
 
+        //list of all settings
         Column(modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
         ) {
+            //title
             Text(
                 modifier = Modifier.padding(top = 16.dp, start = 16.dp, bottom = 8.dp),
                 text = "All settings",
@@ -51,9 +51,9 @@ fun SettingsWindow(){
                 color = MaterialTheme.colors.secondary
             )
 
-
-            var darkModeSubtitleState by remember { mutableStateOf("Off") }
+            //dark mode settings item
             val defaultTheme = isSystemInDarkTheme()
+            var darkModeSubtitleState by remember { mutableStateOf(if(defaultTheme) "On" else "Off") }
             val darkModeSwitchState = remember {
                 mutableStateOf(defaultTheme)
             }
@@ -85,6 +85,7 @@ fun SettingsWindow(){
                 }
             )
 
+            //color theme settings item
             SettingsItem(
                 itemIcon = {
                     Icon(
@@ -102,6 +103,9 @@ fun SettingsWindow(){
                 }
             )
 
+
+
+            //clear all settings item
             SettingsItem(
                 itemIcon = {
                     Icon(

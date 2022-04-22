@@ -60,7 +60,6 @@ fun SettingsItem(
             }
         }
 
-
         Box(
             modifier = Modifier
                 .fillMaxHeight()
