@@ -1,4 +1,4 @@
-package com.bogdan801.rememberit.ui.windows
+package com.bogdan801.rememberit.presentation.windows
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -19,15 +19,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
-import com.bogdan801.rememberit.tools.interpolateColor
-import com.bogdan801.rememberit.ui.custom.composables.NoteCard
-import com.bogdan801.rememberit.ui.custom.composables.SearchBar
-import com.bogdan801.rememberit.ui.custom.composables.TaskCard
-import com.bogdan801.rememberit.ui.custom.layouts.StaggeredVerticalGrid
+import com.bogdan801.rememberit.util.interpolateColor
+import com.bogdan801.rememberit.presentation.custom.composables.NoteCard
+import com.bogdan801.rememberit.presentation.custom.composables.SearchBar
+import com.bogdan801.rememberit.presentation.custom.composables.TaskCard
+import com.bogdan801.rememberit.presentation.custom.layouts.StaggeredVerticalGrid
 import com.bogdan801.rememberit.ui.theme.*
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager

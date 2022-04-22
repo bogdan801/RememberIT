@@ -1,4 +1,4 @@
-package com.bogdan801.rememberit.ui.custom.composables
+package com.bogdan801.rememberit.presentation.custom.composables
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource

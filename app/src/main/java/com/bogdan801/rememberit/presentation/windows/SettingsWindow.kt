@@ -1,4 +1,4 @@
-package com.bogdan801.rememberit.ui.windows
+package com.bogdan801.rememberit.presentation.windows
 
 import android.widget.Toast
 import androidx.compose.foundation.*
@@ -15,9 +15,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bogdan801.rememberit.R
-import com.bogdan801.rememberit.ui.custom.composables.CustomSwitch
-import com.bogdan801.rememberit.ui.custom.composables.SettingsItem
-import com.bogdan801.rememberit.ui.custom.composables.TopAppBar
+import com.bogdan801.rememberit.presentation.custom.composables.CustomSwitch
+import com.bogdan801.rememberit.presentation.custom.composables.SettingsItem
+import com.bogdan801.rememberit.presentation.custom.composables.TopAppBar
 import com.bogdan801.rememberit.ui.theme.RememberITTheme
 import com.bogdan801.rememberit.ui.theme.Typography
 

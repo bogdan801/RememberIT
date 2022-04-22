@@ -1,4 +1,4 @@
-package com.bogdan801.rememberit.ui.custom.composables
+package com.bogdan801.rememberit.presentation.custom.composables
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -12,10 +12,8 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.bogdan801.rememberit.ui.theme.*
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime

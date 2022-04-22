@@ -1,4 +1,4 @@
-package com.bogdan801.rememberit.ui.windows
+package com.bogdan801.rememberit.presentation.windows
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -19,16 +19,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.bogdan801.rememberit.ui.custom.composables.BottomSaveBar
-import com.bogdan801.rememberit.ui.custom.composables.TopAppBar
+import com.bogdan801.rememberit.presentation.custom.composables.BottomSaveBar
+import com.bogdan801.rememberit.presentation.custom.composables.TopAppBar
 import com.bogdan801.rememberit.ui.theme.Typography
+import androidx.compose.ui.platform.LocalFocusManager
 
 @Composable
-fun AddTaskWindow(){
+fun AddNoteWindow(){
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     Column(modifier = Modifier
@@ -36,7 +36,7 @@ fun AddTaskWindow(){
         .background(MaterialTheme.colors.background)
     ) {
         TopAppBar(
-            title = "Creating task",
+            title = "Creating note",
             onBackClick = {
                 Toast.makeText(context, "Going back", Toast.LENGTH_SHORT).show()
             },
@@ -49,6 +49,7 @@ fun AddTaskWindow(){
         )
 
         Box(modifier = Modifier.fillMaxSize()){
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -64,11 +65,11 @@ fun AddTaskWindow(){
                     backgroundColor = MaterialTheme.colors.secondary.copy(alpha = 0.2f)
                 )
                 CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
-                    var taskTitleTextState by remember { mutableStateOf("") }
+                    var notesTitleTextState by remember { mutableStateOf("") }
                     TextField(
-                        value = taskTitleTextState,
+                        value = notesTitleTextState,
                         onValueChange = {
-                            taskTitleTextState = it
+                            notesTitleTextState = it
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -84,22 +85,43 @@ fun AddTaskWindow(){
                             unfocusedIndicatorColor = Color.Transparent
                         ),
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Default),
-                        placeholder = { Text(text = "To do...", style = Typography.h1) }
+                        placeholder = { Text(text = "Title...", style = Typography.h1)}
+                    )
+
+                    var notesContentsTextState by remember { mutableStateOf("") }
+                    TextField(
+                        value = notesContentsTextState,
+                        onValueChange = {
+                            notesContentsTextState = it
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .offset(y=(-16).dp)
+                            .padding(bottom = 80.dp),
+                        singleLine = false,
+                        textStyle = Typography.h4,
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = Color.Transparent,
+                            placeholderColor = MaterialTheme.colors.onSurface,
+                            textColor = MaterialTheme.colors.onPrimary,
+                            cursorColor = MaterialTheme.colors.onPrimary,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent
+                        ),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Default),
+                        placeholder = { Text(text = "Note...", style = Typography.h4)}
                     )
                 }
             }
 
-
-            var dateStringState by remember { mutableStateOf("19 April 2022 14:05") }
             BottomSaveBar(
                 modifier = Modifier.align(Alignment.BottomCenter),
-                text = "Due to:\n$dateStringState",
+                text = "19 April 2022 14:05",
                 onSaveClick = {
                     Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show()
                 },
                 onTextClick = {
                     Toast.makeText(context, "Text", Toast.LENGTH_SHORT).show()
-
                 }
             )
         }
@@ -108,6 +130,6 @@ fun AddTaskWindow(){
 
 @Preview(showBackground = true)
 @Composable
-fun AddTaskWindowPreview() {
-    AddTaskWindow()
+fun DefaultPreview() {
+    AddNoteWindow()
 }

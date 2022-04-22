@@ -1,4 +1,4 @@
-package com.bogdan801.rememberit.ui.custom.composables
+package com.bogdan801.rememberit.presentation.custom.composables
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas

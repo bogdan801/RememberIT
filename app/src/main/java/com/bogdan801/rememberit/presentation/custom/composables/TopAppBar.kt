@@ -1,4 +1,4 @@
-package com.bogdan801.rememberit.ui.custom.composables
+package com.bogdan801.rememberit.presentation.custom.composables
 
 import com.bogdan801.rememberit.R
 import androidx.compose.foundation.background

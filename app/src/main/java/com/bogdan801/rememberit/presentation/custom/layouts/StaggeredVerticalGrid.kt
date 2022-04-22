@@ -1,4 +1,4 @@
-package com.bogdan801.rememberit.ui.custom.layouts
+package com.bogdan801.rememberit.presentation.custom.layouts
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
