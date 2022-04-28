@@ -168,7 +168,7 @@ fun NotesWindow(){
                                         .fillMaxWidth()
                                         .padding(6.dp),
                                     titleText = "Нотатка для прикладу",
-                                    noteText =  "Ця нотатка не містить жодної змістовної для вас інформації, була створена ддя прикладу і не має жодного сенсу для існування.",
+                                    noteText =  "Нотатка для прикладу. Нотатка для прикладу. Нотатка для прикладу",
                                     onClick = { Toast.makeText(context, "Editing", Toast.LENGTH_SHORT).show()},
                                     onDeleteClick = { Toast.makeText(context, "Deleting", Toast.LENGTH_SHORT).show()},
                                     lastEditDateTime = LocalDateTime(

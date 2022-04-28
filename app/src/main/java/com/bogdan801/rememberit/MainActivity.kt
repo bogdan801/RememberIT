@@ -1,6 +1,7 @@
 package com.bogdan801.rememberit
 
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.*
@@ -12,6 +13,7 @@ import com.bogdan801.rememberit.presentation.windows.*
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             RememberITTheme {
                 Surface(color = MaterialTheme.colors.background) {

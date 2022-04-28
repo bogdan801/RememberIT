@@ -1,6 +1,7 @@
 package com.bogdan801.rememberit.presentation.windows
 
 import android.widget.Toast
+import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
@@ -9,18 +10,19 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bogdan801.rememberit.R
-import com.bogdan801.rememberit.presentation.custom.composables.CustomSwitch
-import com.bogdan801.rememberit.presentation.custom.composables.SettingsItem
-import com.bogdan801.rememberit.presentation.custom.composables.TopAppBar
+import com.bogdan801.rememberit.presentation.custom.composables.*
 import com.bogdan801.rememberit.ui.theme.RememberITTheme
 import com.bogdan801.rememberit.ui.theme.Typography
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun SettingsWindow(){
     val context = LocalContext.current
@@ -86,6 +88,8 @@ fun SettingsWindow(){
             )
 
             //color theme settings item
+            var visible by remember { mutableStateOf(false) }
+            var colorThemeState by remember { mutableStateOf(ColorTheme.Default) }
             SettingsItem(
                 itemIcon = {
                     Icon(
@@ -96,12 +100,33 @@ fun SettingsWindow(){
                     )
                 },
                 title = "Color theme",
-                subtitle = "Default",
-                //showBottomSpacer = true,
+                subtitle = colorThemeState.name,
                 onClick = {
-                    Toast.makeText(context, "Theme change click", Toast.LENGTH_SHORT).show()
+                    visible = !visible;
+                },
+                additionalContent = {
+                    ColorThemeTile(colorTheme = colorThemeState)
                 }
             )
+
+            AnimatedVisibility(
+                visible = visible
+            ) {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    ColorTheme.values().forEach {
+                        SettingsSubitem(
+                            text = it.name,
+                            showTopSpacer = true,
+                            additionalItem = {
+                                ColorThemeTile(colorTheme = it)
+                            },
+                            onClick = {
+                                colorThemeState = it
+                            }
+                        )
+                    }
+                }
+            }
 
 
 

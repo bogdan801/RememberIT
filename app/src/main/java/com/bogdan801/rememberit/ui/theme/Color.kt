@@ -2,9 +2,13 @@ package com.bogdan801.rememberit.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+val Yellow = Color(0xFFFDBE00)
+val Blue = Color(0xFF0010EE)
+val Green = Color(0xFF0ED100)
+val Violet = Color(0xFFE90DE9)
+
 val RedError = Color(0xFFBB0000)
 val RedErrorDark = Color(0xFFC82F2F)
-val Yellow = Color(0xFFFDBE00)
 val Gray10 = Color(0xFFF7F7F7)
 val Gray20 = Color(0xFFEDEDED)
 val Gray30 = Color(0xFFD5D5D5)
