@@ -1,4 +1,4 @@
-package com.bogdan801.rememberit.presentation.windows
+package com.bogdan801.rememberit.presentation.windows.notes
 
 import android.widget.Toast
 import androidx.compose.foundation.background
