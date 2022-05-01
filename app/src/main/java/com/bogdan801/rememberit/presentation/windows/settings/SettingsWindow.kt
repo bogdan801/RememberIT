@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.bogdan801.rememberit.R
 import com.bogdan801.rememberit.presentation.custom.composables.*
 import com.bogdan801.rememberit.ui.theme.RememberITTheme
@@ -22,7 +23,9 @@ import com.bogdan801.rememberit.ui.theme.Typography
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun SettingsWindow(){
+fun SettingsWindow(
+    navController: NavHostController
+){
     val context = LocalContext.current
 
     Column(modifier = Modifier
@@ -33,7 +36,7 @@ fun SettingsWindow(){
         TopAppBar(
             title = "Settings",
             onBackClick = {
-                Toast.makeText(context, "Going back", Toast.LENGTH_SHORT).show()
+                navController.popBackStack()
             },
             showUndoRedo = false
         )
@@ -153,7 +156,7 @@ fun SettingsWindow(){
 @Composable
 fun SettingsWindowPreview() {
     RememberITTheme {
-        SettingsWindow()
+        //SettingsWindow()
     }
 
 }

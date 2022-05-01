@@ -1,5 +1,6 @@
 package com.bogdan801.rememberit.presentation.windows.addnote
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -26,9 +27,13 @@ import com.bogdan801.rememberit.presentation.custom.composables.BottomSaveBar
 import com.bogdan801.rememberit.presentation.custom.composables.TopAppBar
 import com.bogdan801.rememberit.ui.theme.Typography
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.navigation.NavHostController
 
 @Composable
-fun AddNoteWindow(){
+fun AddNoteWindow(
+    navController: NavHostController,
+    selectedNoteId: Int = -1
+){
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     Column(modifier = Modifier
@@ -36,9 +41,9 @@ fun AddNoteWindow(){
         .background(MaterialTheme.colors.background)
     ) {
         TopAppBar(
-            title = "Creating note",
+            title = if(selectedNoteId == -1) "Creating note" else "Editing note",
             onBackClick = {
-                Toast.makeText(context, "Going back", Toast.LENGTH_SHORT).show()
+                navController.popBackStack()
             },
             onUndoClick = {
                 Toast.makeText(context, "Undoing", Toast.LENGTH_SHORT).show()
@@ -119,6 +124,7 @@ fun AddNoteWindow(){
                 text = "19 April 2022 14:05",
                 onSaveClick = {
                     Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show()
+                    navController.popBackStack()
                 },
                 onTextClick = {
                     Toast.makeText(context, "Text", Toast.LENGTH_SHORT).show()
@@ -131,5 +137,5 @@ fun AddNoteWindow(){
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    AddNoteWindow()
+    //AddNoteWindow()
 }

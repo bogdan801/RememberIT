@@ -1,6 +1,7 @@
 package com.bogdan801.rememberit.presentation.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,11 +13,13 @@ import com.bogdan801.rememberit.presentation.windows.notes.NotesWindow
 import com.bogdan801.rememberit.presentation.windows.settings.SettingsWindow
 
 @Composable
-fun Navigation(){
-    val navController = rememberNavController()
+fun Navigation(
+    navController: NavHostController
+){
+    //val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.NotesScreen.route){
         composable(Screen.NotesScreen.route){
-            NotesWindow()
+            NotesWindow(navController = navController)
         }
 
         composable(
@@ -24,11 +27,10 @@ fun Navigation(){
             arguments = listOf(
                 navArgument("noteId"){
                     type = NavType.IntType
-                    nullable = true
                 }
             )
-        ){
-            AddNoteWindow()
+        ){ entry ->
+            AddNoteWindow(navController = navController, selectedNoteId = entry.arguments!!.getInt("noteId"))
         }
 
         composable(
@@ -36,15 +38,14 @@ fun Navigation(){
             arguments = listOf(
                 navArgument("taskId"){
                     type = NavType.IntType
-                    nullable = true
                 }
             )
-        ){
-            AddTaskWindow()
+        ){ entry ->
+            AddTaskWindow(navController = navController, selectedTaskId = entry.arguments!!.getInt("taskId"))
         }
 
         composable(Screen.SettingsScreen.route){
-            SettingsWindow()
+            SettingsWindow(navController = navController)
         }
     }
 }

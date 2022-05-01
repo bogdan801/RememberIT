@@ -3,10 +3,13 @@ package com.bogdan801.rememberit.presentation.windows.notes
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -19,14 +22,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.bogdan801.rememberit.util.interpolateColor
 import com.bogdan801.rememberit.presentation.custom.composables.NoteCard
 import com.bogdan801.rememberit.presentation.custom.composables.SearchBar
 import com.bogdan801.rememberit.presentation.custom.composables.TaskCard
 import com.bogdan801.rememberit.presentation.custom.layouts.StaggeredVerticalGrid
+import com.bogdan801.rememberit.presentation.navigation.Screen
 import com.bogdan801.rememberit.ui.theme.*
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -37,7 +43,9 @@ import kotlinx.datetime.Month
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun NotesWindow(){
+fun NotesWindow(
+    navController: NavHostController
+){
     //context and focus manager
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
@@ -114,9 +122,7 @@ fun NotesWindow(){
                         interactionSource = remember { MutableInteractionSource() },
                         indication = rememberRipple(color = MaterialTheme.colors.secondary)
                     ) {
-                        Toast
-                            .makeText(context, "Settings", Toast.LENGTH_SHORT)
-                            .show()
+                        navController.navigate(Screen.SettingsScreen.route)
                     }
                     .padding(10.dp)
                     .align(Alignment.CenterEnd)
@@ -126,20 +132,28 @@ fun NotesWindow(){
         //search bar
         var searchBarTextState by remember { mutableStateOf("") }
         var searchPlaceholderState by remember { mutableStateOf("Search notes") }
-        SearchBar(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 6.dp, end = 6.dp, top = 4.dp, bottom = 10.dp),
-            value = searchBarTextState,
-            onValueChange = { newText->
-                searchBarTextState = newText
-            },
-            placeholder = { Text(searchPlaceholderState, style = Typography.h5, color = MaterialTheme.colors.onSurface) },
-            onSearch = {
-                Toast.makeText(context, "Searching $searchBarTextState...", Toast.LENGTH_SHORT).show()
-                focusManager.clearFocus()
-            }
+
+        val customTextSelectionColors = TextSelectionColors(
+            handleColor = MaterialTheme.colors.secondary,
+            backgroundColor = MaterialTheme.colors.secondary.copy(alpha = 0.2f)
         )
+
+        CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors){
+            SearchBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 6.dp, end = 6.dp, top = 4.dp, bottom = 10.dp),
+                value = searchBarTextState,
+                onValueChange = { newText->
+                    searchBarTextState = newText
+                },
+                placeholder = { Text(searchPlaceholderState, style = Typography.h5, color = MaterialTheme.colors.onSurface) },
+                onSearch = {
+                    Toast.makeText(context, "Searching $searchBarTextState...", Toast.LENGTH_SHORT).show()
+                    focusManager.clearFocus()
+                }
+            )
+        }
 
         //scrollable panel with notes or tasks
         Box(modifier = Modifier.fillMaxSize()){
@@ -151,9 +165,7 @@ fun NotesWindow(){
                 notesColorState = interpolateColor(MaterialTheme.colors.secondary, MaterialTheme.colors.onPrimary, pageState.currentPageOffset + pageState.currentPage)
                 tasksColorState = interpolateColor(MaterialTheme.colors.onPrimary, MaterialTheme.colors.secondary, pageState.currentPageOffset + pageState.currentPage)
 
-                if (pageState.currentPage == 0) searchPlaceholderState = "Search notes"
-                if (pageState.currentPage == 1) searchPlaceholderState = "Search tasks"
-
+                searchPlaceholderState = if (pageState.currentPage == 0) "Search notes" else "Search tasks"
 
                 when(index){
                     0 -> {
@@ -161,6 +173,11 @@ fun NotesWindow(){
                             modifier = Modifier
                                 .fillMaxSize()
                                 .verticalScroll(rememberScrollState())
+                                .pointerInput(Unit) {
+                                    detectTapGestures(onTap = {
+                                        focusManager.clearFocus()
+                                    })
+                                }
                         ) {
                             StaggeredVerticalGrid {
                                 NoteCard(
@@ -169,7 +186,9 @@ fun NotesWindow(){
                                         .padding(6.dp),
                                     titleText = "Нотатка для прикладу",
                                     noteText =  "Нотатка для прикладу. Нотатка для прикладу. Нотатка для прикладу",
-                                    onClick = { Toast.makeText(context, "Editing", Toast.LENGTH_SHORT).show()},
+                                    onClick = {
+                                        navController.navigate(Screen.AddNoteScreen.withArgs("0"))
+                                    },
                                     onDeleteClick = { Toast.makeText(context, "Deleting", Toast.LENGTH_SHORT).show()},
                                     lastEditDateTime = LocalDateTime(
                                         year = 2022,
@@ -201,7 +220,9 @@ fun NotesWindow(){
                                     hour = 10,
                                     minute = 31
                                 ),
-                                onClick = { Toast.makeText(context, "Editing", Toast.LENGTH_SHORT).show()},
+                                onClick = {
+                                    navController.navigate(Screen.AddTaskScreen.withArgs("0"))
+                                },
                                 onDeleteClick = { Toast.makeText(context, "Deleting", Toast.LENGTH_SHORT).show()},
                                 onCheckedChange = { Toast.makeText(context, "Checked: $it", Toast.LENGTH_SHORT).show()}
                             )
@@ -215,7 +236,10 @@ fun NotesWindow(){
             Box(modifier = Modifier.size(150.dp).align(Alignment.BottomCenter).padding(bottom = 20.dp)){
                 FloatingActionButton (
                     modifier = Modifier.align(Alignment.Center).size(70.dp),
-                    onClick = { Toast.makeText(context, "click", Toast.LENGTH_SHORT).show()},
+                    onClick = {
+                        if(pageState.currentPage == 0) navController.navigate(Screen.AddNoteScreen.withArgs("-1"))
+                        if(pageState.currentPage == 1) navController.navigate(Screen.AddTaskScreen.withArgs("-1"))
+                    },
                     shape = CircleShape,
                     backgroundColor = MaterialTheme.colors.secondary
                 ){}

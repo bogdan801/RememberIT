@@ -23,12 +23,16 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.bogdan801.rememberit.presentation.custom.composables.BottomSaveBar
 import com.bogdan801.rememberit.presentation.custom.composables.TopAppBar
 import com.bogdan801.rememberit.ui.theme.Typography
 
 @Composable
-fun AddTaskWindow(){
+fun AddTaskWindow(
+    navController: NavHostController,
+    selectedTaskId: Int = -1
+){
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     Column(modifier = Modifier
@@ -36,9 +40,9 @@ fun AddTaskWindow(){
         .background(MaterialTheme.colors.background)
     ) {
         TopAppBar(
-            title = "Creating task",
+            title = if(selectedTaskId == -1) "Creating task" else "Editing task",
             onBackClick = {
-                Toast.makeText(context, "Going back", Toast.LENGTH_SHORT).show()
+                navController.popBackStack()
             },
             onUndoClick = {
                 Toast.makeText(context, "Undoing", Toast.LENGTH_SHORT).show()
@@ -96,10 +100,10 @@ fun AddTaskWindow(){
                 text = "Due to:\n$dateStringState",
                 onSaveClick = {
                     Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show()
+                    navController.popBackStack()
                 },
                 onTextClick = {
                     Toast.makeText(context, "Text", Toast.LENGTH_SHORT).show()
-
                 }
             )
         }
@@ -109,5 +113,5 @@ fun AddTaskWindow(){
 @Preview(showBackground = true)
 @Composable
 fun AddTaskWindowPreview() {
-    AddTaskWindow()
+    //AddTaskWindow()
 }
