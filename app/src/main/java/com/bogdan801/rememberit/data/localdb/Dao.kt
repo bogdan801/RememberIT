@@ -1,10 +1,10 @@
 package com.bogdan801.rememberit.data.localdb
 
-import android.icu.text.CaseMap
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface Dao {
@@ -52,4 +52,17 @@ interface Dao {
         WHERE LOWER(contents) LIKE '%' || LOWER(:searchQuery) || '%' OR LOWER(dueTo) LIKE '%' || LOWER(:searchQuery) || '%'
     """)
     suspend fun searchTasks(searchQuery: String) : List<TaskEntity>
+
+    //select
+    @Query("SELECT * FROM noteentity")
+    fun getNotes() : Flow<List<NoteEntity>>
+
+    @Query("SELECT * FROM taskentity")
+    fun getTasks() : Flow<List<TaskEntity>>
+
+    @Query("SELECT * FROM noteentity WHERE id = :id")
+    suspend fun getNoteByID(id: Int) : NoteEntity
+
+    @Query("SELECT * FROM taskentity WHERE id = :id")
+    suspend fun getTaskByID(id: Int) : TaskEntity
 }

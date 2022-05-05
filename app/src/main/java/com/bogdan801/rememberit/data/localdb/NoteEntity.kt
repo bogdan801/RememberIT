@@ -9,5 +9,5 @@ data class NoteEntity(
     @PrimaryKey val id: Int? = null,
     val title: String,
     val contents: String,
-    val dateTime: LocalDateTime
+    val dateTime: String
 )

@@ -165,7 +165,9 @@ fun NotesWindow(
                 notesColorState = interpolateColor(MaterialTheme.colors.secondary, MaterialTheme.colors.onPrimary, pageState.currentPageOffset + pageState.currentPage)
                 tasksColorState = interpolateColor(MaterialTheme.colors.onPrimary, MaterialTheme.colors.secondary, pageState.currentPageOffset + pageState.currentPage)
 
-                searchPlaceholderState = if (pageState.currentPage == 0) "Search notes" else "Search tasks"
+                SideEffect {
+                    searchPlaceholderState = if (pageState.currentPage == 0) "Search notes" else "Search tasks"
+                }
 
                 when(index){
                     0 -> {
@@ -233,9 +235,14 @@ fun NotesWindow(
             }
 
             //add button
-            Box(modifier = Modifier.size(150.dp).align(Alignment.BottomCenter).padding(bottom = 20.dp)){
+            Box(modifier = Modifier
+                .size(150.dp)
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 20.dp)){
                 FloatingActionButton (
-                    modifier = Modifier.align(Alignment.Center).size(70.dp),
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .size(70.dp),
                     onClick = {
                         if(pageState.currentPage == 0) navController.navigate(Screen.AddNoteScreen.withArgs("-1"))
                         if(pageState.currentPage == 1) navController.navigate(Screen.AddTaskScreen.withArgs("-1"))
@@ -245,7 +252,9 @@ fun NotesWindow(
                 ){}
                 Text(
                     text = "+",
-                    modifier = Modifier.align(Alignment.Center).offset(y = (-2).dp),
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .offset(y = (-2).dp),
                     color = MaterialTheme.colors.primary,
                     style = Typography.subtitle1
                 )

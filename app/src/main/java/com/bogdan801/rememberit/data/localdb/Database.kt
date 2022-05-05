@@ -8,5 +8,5 @@ import androidx.room.RoomDatabase
     version = 1
 )
 abstract class Database : RoomDatabase() {
-    abstract val dao: Dao
+    abstract val dbDao: Dao
 }

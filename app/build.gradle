@@ -90,4 +90,8 @@ dependencies {
     def viewmodel_version = "2.5.0-beta01"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$viewmodel_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$viewmodel_version"
+
+    //hilt viewmodel
+    implementation "androidx.hilt:hilt-work:1.0.0"
+    kapt "androidx.hilt:hilt-compiler:1.0.0"
 }
