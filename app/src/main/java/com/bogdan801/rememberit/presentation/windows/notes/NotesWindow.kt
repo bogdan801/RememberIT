@@ -25,10 +25,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.bogdan801.rememberit.util.interpolateColor
+import com.bogdan801.rememberit.R
+import com.bogdan801.rememberit.presentation.custom.composables.EmptyListMessage
+import com.bogdan801.rememberit.presentation.util.interpolateColor
 import com.bogdan801.rememberit.presentation.custom.composables.NoteCard
 import com.bogdan801.rememberit.presentation.custom.composables.SearchBar
 import com.bogdan801.rememberit.presentation.custom.composables.TaskCard
@@ -48,16 +51,15 @@ fun NotesWindow(
     navController: NavHostController,
     notesViewModel: NotesViewModel = hiltViewModel()
 ){
-    //context and focus manager
+    //context, focus manager, scope
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
-
-    //current tab state
-    val tabState by remember { mutableStateOf(0) }
-    val pageState = rememberPagerState(pageCount = 2)
     val scope = rememberCoroutineScope()
 
-    //navigation tabs color states and animations
+    //current tab state
+    val pageState = rememberPagerState(pageCount = 2)
+
+    //navigation tabs color states
     val secondary = MaterialTheme.colors.secondary
     val onPrimary = MaterialTheme.colors.onPrimary
     var notesColorState by remember { mutableStateOf(secondary) }
@@ -68,12 +70,11 @@ fun NotesWindow(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
-            .padding(start = 8.dp, end = 8.dp)
     ) {
         //navigation panel
         Box(modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 24.dp, bottom = 8.dp),
+            .padding(top = 24.dp, bottom = 8.dp, start = 8.dp, end = 8.dp),
             contentAlignment = Alignment.Center
         ){
             Row(
@@ -132,9 +133,6 @@ fun NotesWindow(
         }
 
         //search bar
-        var searchBarTextState by remember { mutableStateOf("") }
-        var searchPlaceholderState by remember { mutableStateOf("Search notes") }
-
         val customTextSelectionColors = TextSelectionColors(
             handleColor = MaterialTheme.colors.secondary,
             backgroundColor = MaterialTheme.colors.secondary.copy(alpha = 0.2f)
@@ -144,55 +142,69 @@ fun NotesWindow(
             SearchBar(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 6.dp, end = 6.dp, top = 4.dp, bottom = 10.dp),
-                value = searchBarTextState,
+                    .padding(start = 14.dp, end = 14.dp, top = 4.dp, bottom = 10.dp),
+                value = notesViewModel.searchBarTextState.value,
                 onValueChange = { newText->
-                    searchBarTextState = newText
+                    notesViewModel.searchBarValueChanged(newText, pageState.currentPage)
                 },
-                placeholder = { Text(searchPlaceholderState, style = Typography.h5, color = MaterialTheme.colors.onSurface) },
+                placeholder = {
+                    Text(
+                        text = notesViewModel.searchPlaceholderState.value,
+                        style = Typography.h5,
+                        color = MaterialTheme.colors.onSurface
+                    )
+                },
                 onSearch = {
-                    Toast.makeText(context, "Searching $searchBarTextState...", Toast.LENGTH_SHORT).show()
                     focusManager.clearFocus()
                 }
             )
         }
 
         //scrollable panel with notes or tasks
-        Box(modifier = Modifier.fillMaxSize()){
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .pointerInput(Unit) {
+                    detectTapGestures(onTap = {
+                        focusManager.clearFocus()
+                    })
+                }
+        ){
             HorizontalPager(
                 modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.Top,
                 state = pageState
             ) { index ->
-                notesColorState = interpolateColor(MaterialTheme.colors.secondary, MaterialTheme.colors.onPrimary, pageState.currentPageOffset + pageState.currentPage)
-                tasksColorState = interpolateColor(MaterialTheme.colors.onPrimary, MaterialTheme.colors.secondary, pageState.currentPageOffset + pageState.currentPage)
+                notesColorState = interpolateColor(
+                    MaterialTheme.colors.secondary,
+                    MaterialTheme.colors.onPrimary,
+                    pageState.currentPageOffset + pageState.currentPage
+                )
+                tasksColorState = interpolateColor(
+                    MaterialTheme.colors.onPrimary,
+                    MaterialTheme.colors.secondary,
+                    pageState.currentPageOffset + pageState.currentPage)
 
                 SideEffect {
-                    searchPlaceholderState = if (pageState.currentPage == 0) "Search notes" else "Search tasks"
+                    notesViewModel.setPlaceholder(pageState.currentPage)
                 }
 
                 when(index){
                     0 -> {
                         if(notesViewModel.notesState.value.isEmpty()){
-                            Box(
+                            EmptyListMessage(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .padding(bottom = 100.dp),
-                                contentAlignment = Alignment.Center
-                            ){
-                                Text(text = "There's no notes to show", color = MaterialTheme.colors.onSurface)
-                            }
+                                iconPainter = painterResource(id = R.drawable.ic_empty_note),
+                                text = "There's no notes to show"
+                            )
                         }
                         else{
                             Column(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .verticalScroll(rememberScrollState())
-                                    .pointerInput(Unit) {
-                                        detectTapGestures(onTap = {
-                                            focusManager.clearFocus()
-                                        })
-                                    }
                             ) {
                                 StaggeredVerticalGrid {
                                     notesViewModel.notesState.value.forEach { note ->
@@ -205,7 +217,9 @@ fun NotesWindow(
                                             onClick = {
                                                 navController.navigate(Screen.AddNoteScreen.withArgs(note.id.toString()))
                                             },
-                                            onDeleteClick = { Toast.makeText(context, "Deleting", Toast.LENGTH_SHORT).show()},
+                                            onDeleteClick = {
+                                                notesViewModel.noteDeleteClick(note.id)
+                                            },
                                             lastEditDateTime = note.dateTime
                                         )
                                     }
@@ -217,40 +231,53 @@ fun NotesWindow(
 
                     }
                     1 -> {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .verticalScroll(rememberScrollState())
-                        ) {
-                            TaskCard(
+                        if(notesViewModel.tasksState.value.isEmpty()){
+                            EmptyListMessage(
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 6.dp, vertical = 4.dp),
-                                text = "Доробити нарешті цей додаток",
-                                dueToDateTime = LocalDateTime(
-                                    year = 2022,
-                                    month = Month.MAY,
-                                    dayOfMonth = 12,
-                                    hour = 10,
-                                    minute = 31
-                                ),
-                                onClick = {
-                                    navController.navigate(Screen.AddTaskScreen.withArgs("0"))
-                                },
-                                onDeleteClick = { Toast.makeText(context, "Deleting", Toast.LENGTH_SHORT).show()},
-                                onCheckedChange = { Toast.makeText(context, "Checked: $it", Toast.LENGTH_SHORT).show()}
+                                    .fillMaxSize()
+                                    .padding(bottom = 100.dp),
+                                iconPainter = painterResource(id = R.drawable.ic_empty_task),
+                                text = "There's no tasks to show"
                             )
-                            Spacer(modifier = Modifier.height(100.dp))
+                        }
+                        else {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .verticalScroll(rememberScrollState())
+                            ) {
+                                notesViewModel.tasksState.value.forEach { task ->
+                                    TaskCard(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(horizontal = 14.dp, vertical = 4.dp),
+                                        text = task.contents,
+                                        dueToDateTime = task.dueTo,
+                                        onClick = {
+                                            navController.navigate(Screen.AddTaskScreen.withArgs("0"))
+                                        },
+                                        onDeleteClick = {
+                                            notesViewModel.taskDeleteClick(task.id)
+                                        },
+                                        onCheckedChange = {
+                                            notesViewModel.taskCheckedChanged(task.id, it)
+                                        }
+                                    )
+                                }
+
+                                Spacer(modifier = Modifier.height(100.dp))
+                            }
                         }
                     }
                 }
             }
 
             //add button
-            Box(modifier = Modifier
-                .size(150.dp)
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 20.dp)){
+            Box(
+                modifier = Modifier
+                    .size(150.dp)
+                    .align(Alignment.BottomCenter)
+            ){
                 FloatingActionButton (
                     modifier = Modifier
                         .align(Alignment.Center)

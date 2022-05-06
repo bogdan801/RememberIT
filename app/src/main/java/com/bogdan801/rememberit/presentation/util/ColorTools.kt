@@ -1,4 +1,4 @@
-package com.bogdan801.rememberit.util
+package com.bogdan801.rememberit.presentation.util
 
 import androidx.compose.ui.graphics.Color
 import com.google.android.material.math.MathUtils
