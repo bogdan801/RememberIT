@@ -11,7 +11,9 @@ import androidx.navigation.compose.rememberNavController
 import com.bogdan801.rememberit.presentation.navigation.Navigation
 import com.bogdan801.rememberit.ui.theme.*
 import com.bogdan801.rememberit.presentation.windows.settings.SettingsWindow
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

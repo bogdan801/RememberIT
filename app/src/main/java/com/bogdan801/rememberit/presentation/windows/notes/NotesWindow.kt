@@ -26,6 +26,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.bogdan801.rememberit.util.interpolateColor
 import com.bogdan801.rememberit.presentation.custom.composables.NoteCard
@@ -44,7 +45,8 @@ import kotlinx.datetime.Month
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun NotesWindow(
-    navController: NavHostController
+    navController: NavHostController,
+    notesViewModel: NotesViewModel = hiltViewModel()
 ){
     //context and focus manager
     val context = LocalContext.current
@@ -171,38 +173,48 @@ fun NotesWindow(
 
                 when(index){
                     0 -> {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .verticalScroll(rememberScrollState())
-                                .pointerInput(Unit) {
-                                    detectTapGestures(onTap = {
-                                        focusManager.clearFocus()
-                                    })
-                                }
-                        ) {
-                            StaggeredVerticalGrid {
-                                NoteCard(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(6.dp),
-                                    titleText = "Нотатка для прикладу",
-                                    noteText =  "Нотатка для прикладу. Нотатка для прикладу. Нотатка для прикладу",
-                                    onClick = {
-                                        navController.navigate(Screen.AddNoteScreen.withArgs("0"))
-                                    },
-                                    onDeleteClick = { Toast.makeText(context, "Deleting", Toast.LENGTH_SHORT).show()},
-                                    lastEditDateTime = LocalDateTime(
-                                        year = 2022,
-                                        month = Month.APRIL,
-                                        dayOfMonth = 10,
-                                        hour = 11,
-                                        minute = 22
-                                    )
-                                )
+                        if(notesViewModel.notesState.value.isEmpty()){
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(bottom = 100.dp),
+                                contentAlignment = Alignment.Center
+                            ){
+                                Text(text = "There's no notes to show", color = MaterialTheme.colors.onSurface)
                             }
-                            Spacer(modifier = Modifier.height(100.dp))
                         }
+                        else{
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .verticalScroll(rememberScrollState())
+                                    .pointerInput(Unit) {
+                                        detectTapGestures(onTap = {
+                                            focusManager.clearFocus()
+                                        })
+                                    }
+                            ) {
+                                StaggeredVerticalGrid {
+                                    notesViewModel.notesState.value.forEach { note ->
+                                        NoteCard(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(6.dp),
+                                            titleText = note.title,
+                                            noteText =  note.contents,
+                                            onClick = {
+                                                navController.navigate(Screen.AddNoteScreen.withArgs(note.id.toString()))
+                                            },
+                                            onDeleteClick = { Toast.makeText(context, "Deleting", Toast.LENGTH_SHORT).show()},
+                                            lastEditDateTime = note.dateTime
+                                        )
+                                    }
+                                }
+                                Spacer(modifier = Modifier.height(100.dp))
+                            }
+                        }
+
+
                     }
                     1 -> {
                         Column(
