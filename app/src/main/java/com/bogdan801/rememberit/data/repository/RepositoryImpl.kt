@@ -3,7 +3,7 @@ package com.bogdan801.rememberit.data.repository
 import com.bogdan801.rememberit.data.localdb.Dao
 import com.bogdan801.rememberit.data.localdb.NoteEntity
 import com.bogdan801.rememberit.data.localdb.TaskEntity
-import com.bogdan801.rememberit.data.mapper.toFormatedString
+import com.bogdan801.rememberit.data.mapper.toFormattedString
 import com.bogdan801.rememberit.data.mapper.toNoteEntity
 import com.bogdan801.rememberit.data.mapper.toTaskEntity
 import com.bogdan801.rememberit.domain.model.Note
@@ -46,7 +46,7 @@ class RepositoryImpl(
         dbDao.updateTaskContents(
             taskID = task.id,
             contents = task.contents,
-            dueTo = task.dueTo.toFormatedString()
+            dueTo = task.dueTo.toFormattedString()
         )
     }
 

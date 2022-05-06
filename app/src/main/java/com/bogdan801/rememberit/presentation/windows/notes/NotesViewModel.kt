@@ -18,7 +18,6 @@ class NotesViewModel
 constructor(
     private val repository: Repository
 ) : ViewModel() {
-
     //searchbar states
     var searchBarTextState = mutableStateOf("")
     var searchPlaceholderState = mutableStateOf("Search notes")
@@ -56,11 +55,30 @@ constructor(
     private val _foundNotesState = mutableStateOf(listOf<Note>())
     var notesState: State<List<Note>> = _allNotesState
 
+    fun noteDeleteClick(id :Int){
+        viewModelScope.launch {
+            repository.deleteNote(id)
+        }
+    }
+
     //tasks states
     private val _allTasksState = mutableStateOf(listOf<Task>())
     private val _foundTasksState = mutableStateOf(listOf<Task>())
     var tasksState: State<List<Task>> = _allTasksState
 
+    fun taskDeleteClick(id :Int){
+        viewModelScope.launch {
+            repository.deleteNote(id)
+        }
+    }
+
+    fun taskCheckedChanged(id :Int, status: Boolean){
+        viewModelScope.launch {
+            repository.updateTaskStatus(id, status)
+        }
+    }
+
+    //on viewmodel initialization
     init {
         viewModelScope.launch {
             repository.getNotes().collect{ dbList ->
@@ -73,24 +91,6 @@ constructor(
                     taskEntity.toTask()
                 }
             }
-        }
-    }
-
-    public fun noteDeleteClick(id :Int){
-        viewModelScope.launch {
-            repository.deleteNote(id)
-        }
-    }
-
-    public fun taskDeleteClick(id :Int){
-        viewModelScope.launch {
-            repository.deleteNote(id)
-        }
-    }
-
-    public fun taskCheckedChanged(id :Int, status: Boolean){
-        viewModelScope.launch {
-            repository.updateTaskStatus(id, status)
         }
     }
 }

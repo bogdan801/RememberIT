@@ -27,15 +27,20 @@ import com.bogdan801.rememberit.presentation.custom.composables.BottomSaveBar
 import com.bogdan801.rememberit.presentation.custom.composables.TopAppBar
 import com.bogdan801.rememberit.ui.theme.Typography
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.bogdan801.rememberit.data.mapper.toHumanReadableString
 
 @Composable
 fun AddNoteWindow(
     navController: NavHostController,
-    selectedNoteId: Int = -1
+    selectedNoteId: Int = -1,
+    viewModel: AddNoteViewModel = hiltViewModel()
 ){
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
+
+
     Column(modifier = Modifier
         .fillMaxSize()
         .background(MaterialTheme.colors.background)
@@ -70,11 +75,10 @@ fun AddNoteWindow(
                     backgroundColor = MaterialTheme.colors.secondary.copy(alpha = 0.2f)
                 )
                 CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
-                    var notesTitleTextState by remember { mutableStateOf("") }
                     TextField(
-                        value = notesTitleTextState,
+                        value = viewModel.notesTitleTextState.value,
                         onValueChange = {
-                            notesTitleTextState = it
+                            viewModel.notesTitleTextChanged(it)
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -93,15 +97,14 @@ fun AddNoteWindow(
                         placeholder = { Text(text = "Title...", style = Typography.h1)}
                     )
 
-                    var notesContentsTextState by remember { mutableStateOf("") }
                     TextField(
-                        value = notesContentsTextState,
+                        value = viewModel.notesContentsTextState.value,
                         onValueChange = {
-                            notesContentsTextState = it
+                            viewModel.notesContentsTextChanged(it)
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .offset(y=(-16).dp)
+                            .offset(y = (-16).dp)
                             .padding(bottom = 80.dp),
                         singleLine = false,
                         textStyle = Typography.h4,
@@ -121,21 +124,15 @@ fun AddNoteWindow(
 
             BottomSaveBar(
                 modifier = Modifier.align(Alignment.BottomCenter),
-                text = "19 April 2022 14:05",
+                text = viewModel.currentDateTime.toHumanReadableString(),
                 onSaveClick = {
-                    Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show()
-                    navController.popBackStack()
-                },
-                onTextClick = {
-                    Toast.makeText(context, "Text", Toast.LENGTH_SHORT).show()
+                    if(viewModel.saveNoteClick()){
+                        Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show()
+                        navController.popBackStack()
+                    }
+                    else Toast.makeText(context, "Not saved. Fill some field first", Toast.LENGTH_SHORT).show()
                 }
             )
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    //AddNoteWindow()
 }
