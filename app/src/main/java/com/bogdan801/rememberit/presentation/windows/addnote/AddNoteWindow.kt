@@ -40,6 +40,7 @@ fun AddNoteWindow(
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
 
+    viewModel.initEditId(selectedNoteId)
 
     Column(modifier = Modifier
         .fillMaxSize()

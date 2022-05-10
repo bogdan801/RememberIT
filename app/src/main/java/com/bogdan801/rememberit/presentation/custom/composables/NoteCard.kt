@@ -28,7 +28,9 @@ fun NoteCard(
         backgroundColor = MaterialTheme.colors.primary,
         shape = RoundedCornerShape(10.dp)
     ) {
-        Box(modifier = Modifier.fillMaxSize().clickable(onClick = onClick)){
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .clickable(onClick = onClick)){
             //title and contents
             Column(
                 modifier = Modifier
@@ -40,16 +42,22 @@ fun NoteCard(
                         end = 16.dp
                     )
             ) {
-                Text(
-                    text = titleText,
-                    style = Typography.h3,
-                    color = MaterialTheme.colors.onPrimary
-                )
-                Text(
-                    text = noteText,
-                    modifier = Modifier.padding(bottom = 42.dp),
-                    color = MaterialTheme.colors.onPrimary
-                )
+                if(titleText.isNotBlank()){
+                    Text(
+                        text = titleText,
+                        style = Typography.h3,
+                        color = MaterialTheme.colors.onPrimary
+                    )
+                }
+
+                if(noteText.isNotBlank()){
+                    Text(
+                        text = noteText,
+                        color = MaterialTheme.colors.onPrimary
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(42.dp))
             }
 
             //line spacer

@@ -1,6 +1,5 @@
 package com.bogdan801.rememberit.presentation.windows.notes
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -42,8 +41,6 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.Month
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -189,9 +186,13 @@ fun NotesWindow(
                     notesViewModel.setPlaceholder(pageState.currentPage)
                 }
 
-                when(index){
+                when(index) {
                     0 -> {
-                        if(notesViewModel.notesState.value.isEmpty()){
+                        if(
+                            (notesViewModel.searchBarTextState.value.isBlank() && notesViewModel.allNotesState.value.isEmpty())
+                            ||
+                            (notesViewModel.searchBarTextState.value.isNotBlank() && notesViewModel.foundNotesState.value.isEmpty())
+                        ){
                             EmptyListMessage(
                                 modifier = Modifier
                                     .fillMaxSize()
@@ -200,38 +201,63 @@ fun NotesWindow(
                                 text = "There's no notes to show"
                             )
                         }
-                        else{
+                        else {
                             Column(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .verticalScroll(rememberScrollState())
+                                    .padding(horizontal = 10.dp)
                             ) {
                                 StaggeredVerticalGrid {
-                                    notesViewModel.notesState.value.forEach { note ->
-                                        NoteCard(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(6.dp),
-                                            titleText = note.title,
-                                            noteText =  note.contents,
-                                            onClick = {
-                                                navController.navigate(Screen.AddNoteScreen.withArgs(note.id.toString()))
-                                            },
-                                            onDeleteClick = {
-                                                notesViewModel.noteDeleteClick(note.id)
-                                            },
-                                            lastEditDateTime = note.dateTime
-                                        )
+                                    //not searching
+                                    if(notesViewModel.searchBarTextState.value.isBlank()) {
+                                        notesViewModel.allNotesState.value.forEach { note ->
+                                            NoteCard(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(5.dp),
+                                                titleText = note.title,
+                                                noteText =  note.contents,
+                                                onClick = {
+                                                    navController.navigate(Screen.AddNoteScreen.withArgs(note.id.toString()))
+                                                },
+                                                onDeleteClick = {
+                                                    notesViewModel.noteDeleteClick(note.id)
+                                                },
+                                                lastEditDateTime = note.dateTime
+                                            )
+                                        }
+                                    }
+                                    //searching
+                                    else {
+                                        notesViewModel.foundNotesState.value.forEach { note ->
+                                            NoteCard(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(5.dp),
+                                                titleText = note.title,
+                                                noteText =  note.contents,
+                                                onClick = {
+                                                    navController.navigate(Screen.AddNoteScreen.withArgs(note.id.toString()))
+                                                },
+                                                onDeleteClick = {
+                                                    notesViewModel.noteDeleteClick(note.id)
+                                                },
+                                                lastEditDateTime = note.dateTime
+                                            )
+                                        }
                                     }
                                 }
                                 Spacer(modifier = Modifier.height(100.dp))
                             }
                         }
-
-
                     }
                     1 -> {
-                        if(notesViewModel.tasksState.value.isEmpty()){
+                        if(
+                            (notesViewModel.searchBarTextState.value.isBlank() && notesViewModel.allTasksState.value.isEmpty())
+                            ||
+                            (notesViewModel.searchBarTextState.value.isNotBlank() && notesViewModel.foundTasksState.value.isEmpty())
+                        ){
                             EmptyListMessage(
                                 modifier = Modifier
                                     .fillMaxSize()
@@ -246,25 +272,48 @@ fun NotesWindow(
                                     .fillMaxSize()
                                     .verticalScroll(rememberScrollState())
                             ) {
-                                notesViewModel.tasksState.value.forEach { task ->
-                                    TaskCard(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(horizontal = 14.dp, vertical = 4.dp),
-                                        text = task.contents,
-                                        dueToDateTime = task.dueTo,
-                                        onClick = {
-                                            navController.navigate(Screen.AddTaskScreen.withArgs("0"))
-                                        },
-                                        onDeleteClick = {
-                                            notesViewModel.taskDeleteClick(task.id)
-                                        },
-                                        onCheckedChange = {
-                                            notesViewModel.taskCheckedChanged(task.id, it)
-                                        }
-                                    )
+                                //not searching
+                                if(notesViewModel.searchBarTextState.value.isBlank()) {
+                                    notesViewModel.allTasksState.value.forEach { task ->
+                                        TaskCard(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(horizontal = 14.dp, vertical = 4.dp),
+                                            text = task.contents,
+                                            dueToDateTime = task.dueTo,
+                                            onClick = {
+                                                navController.navigate(Screen.AddTaskScreen.withArgs("0"))
+                                            },
+                                            onDeleteClick = {
+                                                notesViewModel.taskDeleteClick(task.id)
+                                            },
+                                            onCheckedChange = {
+                                                notesViewModel.taskCheckedChanged(task.id, it)
+                                            }
+                                        )
+                                    }
                                 }
-
+                                //searching
+                                else {
+                                    notesViewModel.foundTasksState.value.forEach { task ->
+                                        TaskCard(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(horizontal = 14.dp, vertical = 4.dp),
+                                            text = task.contents,
+                                            dueToDateTime = task.dueTo,
+                                            onClick = {
+                                                navController.navigate(Screen.AddTaskScreen.withArgs("0"))
+                                            },
+                                            onDeleteClick = {
+                                                notesViewModel.taskDeleteClick(task.id)
+                                            },
+                                            onCheckedChange = {
+                                                notesViewModel.taskCheckedChanged(task.id, it)
+                                            }
+                                        )
+                                    }
+                                }
                                 Spacer(modifier = Modifier.height(100.dp))
                             }
                         }
