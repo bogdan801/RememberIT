@@ -29,7 +29,6 @@ constructor(
     fun searchBarValueChanged(newText: String, pageState: Int){
         _searchBarTextState.value = newText
         if(pageState == 0){
-            Log.d("puk", "new text: $newText, page state: $pageState, note si")
             viewModelScope.launch {
                 _foundNotesState.value = repository.searchNotes(newText).map { it.toNote() }
             }
@@ -66,7 +65,7 @@ constructor(
 
     fun taskDeleteClick(id :Int){
         viewModelScope.launch {
-            repository.deleteNote(id)
+            repository.deleteTask(id)
         }
     }
 
@@ -84,6 +83,9 @@ constructor(
                     noteEntity.toNote()
                 }
             }
+        }
+
+        viewModelScope.launch {
             repository.getTasks().collect{ dbList ->
                 _allTasksState.value = dbList.map { taskEntity->
                     taskEntity.toTask()

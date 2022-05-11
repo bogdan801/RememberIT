@@ -1,6 +1,5 @@
 package com.bogdan801.rememberit.presentation.windows.addnote
 
-
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -8,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.bogdan801.rememberit.data.mapper.toNote
 import com.bogdan801.rememberit.domain.model.Note
 import com.bogdan801.rememberit.domain.repository.Repository
+import com.bogdan801.rememberit.presentation.windows.util.UndoRedoStack
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.datetime.*
@@ -29,10 +29,34 @@ constructor(
                 val note: Note = repository.getNoteById(editID).toNote()
                 _notesTitleTextState.value = note.title
                 _notesContentsTextState.value = note.contents
+                contentsUndoStack = UndoRedoStack<String>().pushDefault(note.contents)
                 currentDateTime = note.dateTime
             }
 
         }
+    }
+
+    //undo/redo
+    private var contentsUndoStack = UndoRedoStack<String>().pushDefault("")
+
+    private var _undoShowState = mutableStateOf(false)
+    val undoShowState: State<Boolean> = _undoShowState
+
+    private var _redoShowState = mutableStateOf(false)
+    val redoShowState: State<Boolean> = _redoShowState
+
+
+
+    fun undoClicked(){
+        _notesContentsTextState.value = contentsUndoStack.undo().toString()
+        _undoShowState.value = contentsUndoStack.isUndoActive
+        _redoShowState.value = contentsUndoStack.isRedoActive
+    }
+
+    fun redoClicked(){
+        _notesContentsTextState.value = contentsUndoStack.redo().toString()
+        _undoShowState.value = contentsUndoStack.isUndoActive
+        _redoShowState.value = contentsUndoStack.isRedoActive
     }
 
     //title
@@ -47,6 +71,9 @@ constructor(
     val notesContentsTextState: State<String> = _notesContentsTextState
     fun notesContentsTextChanged(newText: String){
         _notesContentsTextState.value = newText
+        contentsUndoStack.pushValue(newText)
+        _undoShowState.value = contentsUndoStack.isUndoActive
+        _redoShowState.value = contentsUndoStack.isRedoActive
     }
 
     //datetime
@@ -79,4 +106,9 @@ constructor(
             true
         } else false
     }
+}
+
+enum class TextType{
+    TITLE,
+    CONTENTS
 }

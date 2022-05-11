@@ -282,14 +282,15 @@ fun NotesWindow(
                                             text = task.contents,
                                             dueToDateTime = task.dueTo,
                                             onClick = {
-                                                navController.navigate(Screen.AddTaskScreen.withArgs("0"))
+                                                navController.navigate(Screen.AddTaskScreen.withArgs(task.id.toString()))
                                             },
                                             onDeleteClick = {
                                                 notesViewModel.taskDeleteClick(task.id)
                                             },
                                             onCheckedChange = {
                                                 notesViewModel.taskCheckedChanged(task.id, it)
-                                            }
+                                            },
+                                            done = task.isChecked
                                         )
                                     }
                                 }
@@ -303,18 +304,19 @@ fun NotesWindow(
                                             text = task.contents,
                                             dueToDateTime = task.dueTo,
                                             onClick = {
-                                                navController.navigate(Screen.AddTaskScreen.withArgs("0"))
+                                                navController.navigate(Screen.AddTaskScreen.withArgs(task.id.toString()))
                                             },
                                             onDeleteClick = {
                                                 notesViewModel.taskDeleteClick(task.id)
                                             },
                                             onCheckedChange = {
                                                 notesViewModel.taskCheckedChanged(task.id, it)
-                                            }
+                                            },
+                                            done = task.isChecked
                                         )
                                     }
                                 }
-                                Spacer(modifier = Modifier.height(100.dp))
+                                Spacer(modifier = Modifier.height(130.dp))
                             }
                         }
                     }

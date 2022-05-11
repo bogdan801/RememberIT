@@ -21,9 +21,10 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.bogdan801.rememberit.data.mapper.toHumanReadableString
 import com.bogdan801.rememberit.presentation.custom.composables.BottomSaveBar
 import com.bogdan801.rememberit.presentation.custom.composables.TopAppBar
 import com.bogdan801.rememberit.ui.theme.Typography
@@ -31,10 +32,14 @@ import com.bogdan801.rememberit.ui.theme.Typography
 @Composable
 fun AddTaskWindow(
     navController: NavHostController,
-    selectedTaskId: Int = -1
+    selectedTaskId: Int = -1,
+    viewModel: AddTaskViewModel = hiltViewModel()
 ){
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
+
+    viewModel.initEditId(selectedTaskId)
+
     Column(modifier = Modifier
         .fillMaxSize()
         .background(MaterialTheme.colors.background)
@@ -45,11 +50,13 @@ fun AddTaskWindow(
                 navController.popBackStack()
             },
             onUndoClick = {
-                Toast.makeText(context, "Undoing", Toast.LENGTH_SHORT).show()
+                viewModel.undoClicked()
             },
             onRedoClick = {
-                Toast.makeText(context, "Redoing", Toast.LENGTH_SHORT).show()
-            }
+                viewModel.redoClicked()
+            },
+            isUndoActive = viewModel.undoShowState.value,
+            isRedoActive = viewModel.redoShowState.value
         )
 
         Box(modifier = Modifier.fillMaxSize()){
@@ -68,11 +75,10 @@ fun AddTaskWindow(
                     backgroundColor = MaterialTheme.colors.secondary.copy(alpha = 0.2f)
                 )
                 CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
-                    var taskTitleTextState by remember { mutableStateOf("") }
                     TextField(
-                        value = taskTitleTextState,
+                        value = viewModel.tasksContentsTextState.value,
                         onValueChange = {
-                            taskTitleTextState = it
+                            viewModel.tasksContentsTextChanged(it)
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -93,25 +99,20 @@ fun AddTaskWindow(
                 }
             }
 
-
-            var dateStringState by remember { mutableStateOf("19 April 2022 14:05") }
             BottomSaveBar(
                 modifier = Modifier.align(Alignment.BottomCenter),
-                text = "Due to:\n$dateStringState",
+                text = "Due to:\n${viewModel.dueToDateTime.value.toHumanReadableString()}",
                 onSaveClick = {
-                    Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show()
-                    navController.popBackStack()
+                    if(viewModel.saveTaskClick()){
+                        Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show()
+                        navController.popBackStack()
+                    }
+                    else Toast.makeText(context, "Not saved. Fill some field first", Toast.LENGTH_SHORT).show()
                 },
                 onTextClick = {
-                    Toast.makeText(context, "Text", Toast.LENGTH_SHORT).show()
+                    viewModel.selectDateTime(context)
                 }
             )
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun AddTaskWindowPreview() {
-    //AddTaskWindow()
 }

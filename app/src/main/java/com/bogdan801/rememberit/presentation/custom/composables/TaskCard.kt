@@ -28,15 +28,17 @@ fun TaskCard(
     onCheckedChange: ((Boolean) -> Unit)? = null,
     onClick: () -> Unit = {},
     onDeleteClick: () -> Unit,
-    isDone: MutableState<Boolean> = remember {mutableStateOf(false)}
+    done: Boolean
 ){
     val currentDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
     val dueToColor = if(currentDateTime>dueToDateTime) MaterialTheme.colors.error else MaterialTheme.colors.primaryVariant
 
+    val isDone = remember {mutableStateOf(done)}
+
     val primary = MaterialTheme.colors.primary
     val onBackground = MaterialTheme.colors.onBackground
 
-    var cardColorState by remember { mutableStateOf(primary) }
+    var cardColorState by remember { mutableStateOf(if(isDone.value) onBackground else primary) }
     val cardColor by animateColorAsState(targetValue = cardColorState, tween(durationMillis = 200))
     Card(
         modifier = modifier

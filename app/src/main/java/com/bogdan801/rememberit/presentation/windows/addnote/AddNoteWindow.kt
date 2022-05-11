@@ -1,6 +1,5 @@
 package com.bogdan801.rememberit.presentation.windows.addnote
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -20,15 +19,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.bogdan801.rememberit.presentation.custom.composables.BottomSaveBar
 import com.bogdan801.rememberit.presentation.custom.composables.TopAppBar
 import com.bogdan801.rememberit.ui.theme.Typography
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.bogdan801.rememberit.data.mapper.toHumanReadableString
 
 @Composable
@@ -52,11 +50,13 @@ fun AddNoteWindow(
                 navController.popBackStack()
             },
             onUndoClick = {
-                Toast.makeText(context, "Undoing", Toast.LENGTH_SHORT).show()
+                viewModel.undoClicked()
             },
             onRedoClick = {
-                Toast.makeText(context, "Redoing", Toast.LENGTH_SHORT).show()
-            }
+                viewModel.redoClicked()
+            },
+            isUndoActive = viewModel.undoShowState.value,
+            isRedoActive = viewModel.redoShowState.value
         )
 
         Box(modifier = Modifier.fillMaxSize()){
