@@ -1,6 +1,5 @@
 package com.bogdan801.rememberit.presentation.windows.notes
 
-import android.util.Log
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,7 +10,6 @@ import com.bogdan801.rememberit.domain.model.Task
 import com.bogdan801.rememberit.domain.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -55,6 +53,12 @@ constructor(
         viewModelScope.launch {
             repository.deleteNote(id)
         }
+
+        if(_searchBarTextState.value.isNotBlank()){
+            viewModelScope.launch {
+                _foundNotesState.value = repository.searchNotes(_searchBarTextState.value).map { it.toNote() }
+            }
+        }
     }
 
     //tasks states
@@ -67,11 +71,23 @@ constructor(
         viewModelScope.launch {
             repository.deleteTask(id)
         }
+
+        if(_searchBarTextState.value.isNotBlank()){
+            viewModelScope.launch {
+                _foundTasksState.value = repository.searchTasks(_searchBarTextState.value).map { it.toTask() }
+            }
+        }
     }
 
     fun taskCheckedChanged(id :Int, status: Boolean){
         viewModelScope.launch {
             repository.updateTaskStatus(id, status)
+        }
+
+        if(_searchBarTextState.value.isNotBlank()){
+            viewModelScope.launch {
+                _foundTasksState.value = repository.searchTasks(_searchBarTextState.value).map { it.toTask() }
+            }
         }
     }
 

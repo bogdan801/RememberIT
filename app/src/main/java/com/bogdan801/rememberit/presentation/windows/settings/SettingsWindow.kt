@@ -15,18 +15,38 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.bogdan801.rememberit.R
+import com.bogdan801.rememberit.data.datastore.saveToDataStore
 import com.bogdan801.rememberit.presentation.custom.composables.*
+import com.bogdan801.rememberit.ui.theme.ColorTheme
 import com.bogdan801.rememberit.ui.theme.RememberITTheme
 import com.bogdan801.rememberit.ui.theme.Typography
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun SettingsWindow(
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: SettingsViewModel = hiltViewModel(),
+    darkThemeState: MutableState<Boolean>,
+    colorThemeState: MutableState<ColorTheme>
 ){
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    DialogBox(
+        showDialogState = viewModel.showDialogState,
+        title = "Confirm deletion",
+        text = "Do you really want to delete all notes and tasks?",
+        confirmButtonText = "Confirm",
+        dismissButtonText = "Dismiss",
+        onConfirmButtonClick = {
+            viewModel.confirmDeleteClicked()
+            Toast.makeText(context, "Deleted successfully", Toast.LENGTH_SHORT).show()
+        }
+    )
 
     Column(modifier = Modifier
         .fillMaxSize()
@@ -55,11 +75,6 @@ fun SettingsWindow(
             )
 
             //dark mode settings item
-            val defaultTheme = isSystemInDarkTheme()
-            var darkModeSubtitleState by remember { mutableStateOf(if(defaultTheme) "On" else "Off") }
-            val darkModeSwitchState = remember {
-                mutableStateOf(defaultTheme)
-            }
             SettingsItem(
                 itemIcon = {
                     Icon(
@@ -70,19 +85,21 @@ fun SettingsWindow(
                     )
                 },
                 title = "Dark mode",
-                subtitle = darkModeSubtitleState,
+                subtitle = if(darkThemeState.value) "On" else "Off",
                 showBottomSpacer = true,
                 onClick = {
-                    darkModeSwitchState.value = !darkModeSwitchState.value
-                    darkModeSubtitleState = if(darkModeSwitchState.value) "On" else "Off"
-                    Toast.makeText(context, "Mode changed", Toast.LENGTH_SHORT).show()
+                    darkThemeState.value = !darkThemeState.value
+                    scope.launch {
+                        context.saveToDataStore("dark_theme", if(darkThemeState.value) 1 else 0)
+                    }
                 },
                 additionalContent = {
                     CustomSwitch(
-                        switchState = darkModeSwitchState,
+                        switchState = darkThemeState,
                         onStateChange = {
-                            darkModeSubtitleState = if(it) "On" else "Off"
-                            Toast.makeText(context, "Dark mode is ${darkModeSubtitleState.lowercase()}", Toast.LENGTH_SHORT).show()
+                            scope.launch {
+                                context.saveToDataStore("dark_theme", if(darkThemeState.value) 1 else 0)
+                            }
                         }
                     )
                 }
@@ -90,7 +107,6 @@ fun SettingsWindow(
 
             //color theme settings item
             var visible by remember { mutableStateOf(false) }
-            var colorThemeState by remember { mutableStateOf(ColorTheme.Default) }
             SettingsItem(
                 itemIcon = {
                     Icon(
@@ -101,12 +117,12 @@ fun SettingsWindow(
                     )
                 },
                 title = "Color theme",
-                subtitle = colorThemeState.name,
+                subtitle = colorThemeState.value.name,
                 onClick = {
                     visible = !visible;
                 },
                 additionalContent = {
-                    ColorThemeTile(colorTheme = colorThemeState)
+                    ColorThemeTile(colorTheme = colorThemeState.value)
                 }
             )
 
@@ -122,14 +138,15 @@ fun SettingsWindow(
                                 ColorThemeTile(colorTheme = it)
                             },
                             onClick = {
-                                colorThemeState = it
+                                colorThemeState.value = it
+                                scope.launch {
+                                    context.saveToDataStore("color_theme", ColorTheme.values().indexOf(it))
+                                }
                             }
                         )
                     }
                 }
             }
-
-
 
             //clear all settings item
             SettingsItem(
@@ -144,12 +161,11 @@ fun SettingsWindow(
                 title = "Clear all entries",
                 showTopSpacer = true,
                 onClick = {
-                    Toast.makeText(context, "Clearing everything", Toast.LENGTH_SHORT).show()
+                    viewModel.showDeleteAllDialog()
                 }
             )
         }
     }
-
 }
 
 @Preview(showBackground = true)

@@ -1,5 +1,6 @@
 package com.bogdan801.rememberit.presentation.custom.composables
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -20,12 +21,13 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 fun TaskCard(
     modifier: Modifier = Modifier,
     text: String = "",
     dueToDateTime: LocalDateTime,
-    onCheckedChange: ((Boolean) -> Unit)? = null,
+    onCheckedChange: ((Boolean) -> Unit),
     onClick: () -> Unit = {},
     onDeleteClick: () -> Unit,
     done: Boolean
@@ -33,13 +35,12 @@ fun TaskCard(
     val currentDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
     val dueToColor = if(currentDateTime>dueToDateTime) MaterialTheme.colors.error else MaterialTheme.colors.primaryVariant
 
-    val isDone = remember {mutableStateOf(done)}
+    //val isDone = remember {mutableStateOf(done)}
 
     val primary = MaterialTheme.colors.primary
     val onBackground = MaterialTheme.colors.onBackground
 
-    var cardColorState by remember { mutableStateOf(if(isDone.value) onBackground else primary) }
-    val cardColor by animateColorAsState(targetValue = cardColorState, tween(durationMillis = 200))
+    val cardColor by animateColorAsState(targetValue = if(done) onBackground else primary, tween(durationMillis = 200))
     Card(
         modifier = modifier
             .defaultMinSize(minHeight = 120.dp),
@@ -97,12 +98,8 @@ fun TaskCard(
                 //is done checkbox
                 Checkbox(
                     modifier = Modifier.align(Alignment.Center),
-                    checked = isDone.value,
-                    onCheckedChange = {
-                        isDone.value = !isDone.value
-                        cardColorState = if(isDone.value) onBackground else primary
-                        onCheckedChange?.invoke(it)
-                    },
+                    checked = done,
+                    onCheckedChange = onCheckedChange,
                     colors = CheckboxDefaults.colors(MaterialTheme.colors.secondary)
                 )
 

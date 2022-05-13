@@ -29,12 +29,23 @@ private val LightColorPalette = lightColors(
     onSurface = Gray40
 )
 
+enum class ColorTheme(val color: Color){
+    Default(Yellow),
+    Blue(com.bogdan801.rememberit.ui.theme.Blue),
+    Green(com.bogdan801.rememberit.ui.theme.Green),
+    Violet(com.bogdan801.rememberit.ui.theme.Violet)
+}
+
 @Composable
-fun RememberITTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable() () -> Unit) {
+fun RememberITTheme(darkTheme: Boolean = isSystemInDarkTheme(), colorTheme: ColorTheme = ColorTheme.Default, content: @Composable() () -> Unit) {
     val colors = if (darkTheme) {
-        DarkColorPalette
+        DarkColorPalette.copy(
+            secondary = colorTheme.color
+        )
     } else {
-        LightColorPalette
+        LightColorPalette.copy(
+            secondary = colorTheme.color
+        )
     }
 
     MaterialTheme(

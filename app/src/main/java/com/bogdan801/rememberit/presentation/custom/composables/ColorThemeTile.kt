@@ -18,14 +18,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.bogdan801.rememberit.ui.theme.*
 
-
-enum class ColorTheme(val color: Color){
-    Default(Yellow),
-    Blue(com.bogdan801.rememberit.ui.theme.Blue),
-    Green(com.bogdan801.rememberit.ui.theme.Green),
-    Violet(com.bogdan801.rememberit.ui.theme.Violet)
-}
-
 @Composable
 fun ColorThemeTile(
     modifier: Modifier = Modifier,
@@ -37,12 +29,4 @@ fun ColorThemeTile(
         .clip(CircleShape)
         .background(color = colorTheme.color)
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ColorThemeTilePreview() {
-    RememberITTheme {
-        ColorThemeTile()
-    }
 }

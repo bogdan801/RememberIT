@@ -1,5 +1,6 @@
 package com.bogdan801.rememberit.presentation.windows.notes
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -248,7 +249,7 @@ fun NotesWindow(
                                         }
                                     }
                                 }
-                                Spacer(modifier = Modifier.height(100.dp))
+                                Spacer(modifier = Modifier.height(130.dp))
                             }
                         }
                     }
