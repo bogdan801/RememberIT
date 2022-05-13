@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Запам\'ятатиЦЕ</string>
+    <string name="notes">Нотатки</string>
+    <string name="tasks">Завдання</string>
+    <string name="no_notes_to_show">Немає нотаток</string>
+    <string name="no_tasks_to_show">Немає завдань</string>
+    <string name="search_notes">Шукати нотатки</string>
+    <string name="search_tasks">Шукати завдання</string>
+    <string name="creating_note">Створення нотатки</string>
+    <string name="editing_note">Редагування</string>
+    <string name="creating_task">Створення завдання</string>
+    <string name="editing_task">Редагування</string>
+    <string name="title_placeholder">Загаловок…</string>
+    <string name="note_placeholder">Нотатка…</string>
+    <string name="to_do">Нагадати про…</string>
+    <string name="saved">Збережено</string>
+    <string name="not_saved">Не збережено. Спочатку заповніть хоч одне поле</string>
+    <string name="jan">Січня</string>
+    <string name="feb">Лютого</string>
+    <string name="mar">Березня</string>
+    <string name="apr">Квітня</string>
+    <string name="may">Травня</string>
+    <string name="jun">Червня</string>
+    <string name="jul">Липня</string>
+    <string name="aug">Серпня</string>
+    <string name="sep">Вересня</string>
+    <string name="oct">Жовтня</string>
+    <string name="nov">Листопада</string>
+    <string name="dec">Грудня</string>
+    <string name="save">ЗБЕРЕГТИ</string>
+    <string name="due_to">"До: "</string>
+    <string name="confirm_deletion">Підтвердження видалення</string>
+    <string name="do_you_want_to_delete">Ви дійсно хочете видалити всі нотатки та нагадування?</string>
+    <string name="confirm">Підтвердити</string>
+    <string name="dismiss">Скасувати</string>
+    <string name="deleted_successfully">Видалено успішно</string>
+    <string name="settings">Налаштування</string>
+    <string name="all_settings">Всі налаштування</string>
+    <string name="dark_mode">Нічний режим</string>
+    <string name="on">Ввімкнено</string>
+    <string name="off">Вимкнено</string>
+    <string name="color_theme">Кольорова тема</string>
+    <string name="clear_all_entries">Видалити всі записи</string>
+</resources>

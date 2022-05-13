@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -38,13 +39,13 @@ fun SettingsWindow(
 
     DialogBox(
         showDialogState = viewModel.showDialogState,
-        title = "Confirm deletion",
-        text = "Do you really want to delete all notes and tasks?",
-        confirmButtonText = "Confirm",
-        dismissButtonText = "Dismiss",
+        title = stringResource(id = R.string.confirm_deletion),
+        text = stringResource(id = R.string.do_you_want_to_delete),
+        confirmButtonText = stringResource(id = R.string.confirm),
+        dismissButtonText = stringResource(id = R.string.dismiss),
         onConfirmButtonClick = {
             viewModel.confirmDeleteClicked()
-            Toast.makeText(context, "Deleted successfully", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getText(R.string.deleted_successfully), Toast.LENGTH_SHORT).show()
         }
     )
 
@@ -54,7 +55,7 @@ fun SettingsWindow(
     ){
         //top app bar
         TopAppBar(
-            title = "Settings",
+            title = stringResource(id = R.string.settings),
             onBackClick = {
                 navController.popBackStack()
             },
@@ -69,7 +70,7 @@ fun SettingsWindow(
             //title
             Text(
                 modifier = Modifier.padding(top = 16.dp, start = 16.dp, bottom = 8.dp),
-                text = "All settings",
+                text = stringResource(id = R.string.all_settings),
                 style = Typography.body2,
                 color = MaterialTheme.colors.secondary
             )
@@ -79,13 +80,13 @@ fun SettingsWindow(
                 itemIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_night_mode),
-                        contentDescription = "Dark mode",
+                        contentDescription = stringResource(id = R.string.dark_mode),
                         tint = MaterialTheme.colors.primaryVariant,
                         modifier = Modifier.size(26.dp)
                     )
                 },
-                title = "Dark mode",
-                subtitle = if(darkThemeState.value) "On" else "Off",
+                title = stringResource(id = R.string.dark_mode),
+                subtitle = if(darkThemeState.value) stringResource(id = R.string.on) else stringResource(id = R.string.off),
                 showBottomSpacer = true,
                 onClick = {
                     darkThemeState.value = !darkThemeState.value
@@ -111,12 +112,12 @@ fun SettingsWindow(
                 itemIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_palette),
-                        contentDescription = "Change color theme",
+                        contentDescription = stringResource(id = R.string.color_theme),
                         tint = MaterialTheme.colors.primaryVariant,
                         modifier = Modifier.size(26.dp)
                     )
                 },
-                title = "Color theme",
+                title = stringResource(id = R.string.color_theme),
                 subtitle = colorThemeState.value.name,
                 onClick = {
                     visible = !visible;
@@ -153,12 +154,12 @@ fun SettingsWindow(
                 itemIcon = {
                     Icon(
                         imageVector = Icons.Filled.Delete,
-                        contentDescription = "Clear all entries",
+                        contentDescription = stringResource(id = R.string.clear_all_entries),
                         tint = MaterialTheme.colors.primaryVariant,
                         modifier = Modifier.size(32.dp)
                     )
                 },
-                title = "Clear all entries",
+                title = stringResource(id = R.string.clear_all_entries),
                 showTopSpacer = true,
                 onClick = {
                     viewModel.showDeleteAllDialog()
@@ -166,13 +167,4 @@ fun SettingsWindow(
             )
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SettingsWindowPreview() {
-    RememberITTheme {
-        //SettingsWindow()
-    }
-
 }

@@ -1,6 +1,5 @@
 package com.bogdan801.rememberit.presentation.windows.notes
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -23,9 +22,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -50,7 +49,6 @@ fun NotesWindow(
     notesViewModel: NotesViewModel = hiltViewModel()
 ){
     //context, focus manager, scope
-    val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val scope = rememberCoroutineScope()
 
@@ -82,7 +80,7 @@ fun NotesWindow(
                 verticalAlignment = Alignment.CenterVertically
             ){
                 Text (
-                    text = "Notes",
+                    text = stringResource(id = R.string.notes),
                     modifier = Modifier
                         .padding(end = 8.dp)
                         .clickable(
@@ -97,7 +95,7 @@ fun NotesWindow(
                     color = notesColorState
                 )
                 Text (
-                    text = "Tasks",
+                    text = stringResource(id = R.string.tasks),
                     modifier = Modifier
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
@@ -199,7 +197,7 @@ fun NotesWindow(
                                     .fillMaxSize()
                                     .padding(bottom = 100.dp),
                                 iconPainter = painterResource(id = R.drawable.ic_empty_note),
-                                text = "There's no notes to show"
+                                text = stringResource(id = R.string.no_notes_to_show)
                             )
                         }
                         else {
@@ -264,7 +262,7 @@ fun NotesWindow(
                                     .fillMaxSize()
                                     .padding(bottom = 100.dp),
                                 iconPainter = painterResource(id = R.drawable.ic_empty_task),
-                                text = "There's no tasks to show"
+                                text = stringResource(id = R.string.no_tasks_to_show)
                             )
                         }
                         else {

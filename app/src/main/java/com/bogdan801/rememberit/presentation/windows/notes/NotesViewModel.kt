@@ -3,6 +3,8 @@ package com.bogdan801.rememberit.presentation.windows.notes
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bogdan801.rememberit.BaseApplication
+import com.bogdan801.rememberit.R
 import com.bogdan801.rememberit.data.mapper.toNote
 import com.bogdan801.rememberit.data.mapper.toTask
 import com.bogdan801.rememberit.domain.model.Note
@@ -16,11 +18,12 @@ import javax.inject.Inject
 class NotesViewModel
 @Inject
 constructor(
-    private val repository: Repository
+    private val repository: Repository,
+    private val application: BaseApplication
 ) : ViewModel() {
     //searchbar states
     private var _searchBarTextState = mutableStateOf("")
-    private var _searchPlaceholderState = mutableStateOf("Search notes")
+    private var _searchPlaceholderState = mutableStateOf(application.getString(R.string.search_notes))
     var searchBarTextState: State<String> = _searchBarTextState
     var searchPlaceholderState: State<String> = _searchPlaceholderState
 
@@ -40,7 +43,7 @@ constructor(
     }
 
     fun setPlaceholder(pageState: Int){
-        _searchPlaceholderState.value = if (pageState == 0) "Search notes" else "Search tasks"
+        _searchPlaceholderState.value = if (pageState == 0) application.getString(R.string.search_notes) else application.getString(R.string.search_tasks)
     }
 
     //notes states

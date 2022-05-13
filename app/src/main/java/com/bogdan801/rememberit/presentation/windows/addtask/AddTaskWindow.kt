@@ -20,10 +20,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.bogdan801.rememberit.R
 import com.bogdan801.rememberit.data.mapper.toHumanReadableString
 import com.bogdan801.rememberit.presentation.custom.composables.BottomSaveBar
 import com.bogdan801.rememberit.presentation.custom.composables.TopAppBar
@@ -45,7 +47,7 @@ fun AddTaskWindow(
         .background(MaterialTheme.colors.background)
     ) {
         TopAppBar(
-            title = if(selectedTaskId == -1) "Creating task" else "Editing task",
+            title = if(selectedTaskId == -1) stringResource(id = R.string.creating_task) else stringResource(id = R.string.editing_task),
             onBackClick = {
                 navController.popBackStack()
             },
@@ -94,24 +96,25 @@ fun AddTaskWindow(
                             unfocusedIndicatorColor = Color.Transparent
                         ),
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Default),
-                        placeholder = { Text(text = "To do...", style = Typography.h1) }
+                        placeholder = { Text(text = stringResource(id = R.string.to_do), style = Typography.h1) }
                     )
                 }
             }
 
             BottomSaveBar(
                 modifier = Modifier.align(Alignment.BottomCenter),
-                text = "Due to:\n${viewModel.dueToDateTime.value.toHumanReadableString()}",
+                text = "${stringResource(id = R.string.due_to)}\n${viewModel.dueToDateTime.value.toHumanReadableString(context)}",
                 onSaveClick = {
                     if(viewModel.saveTaskClick()){
-                        Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getText(R.string.saved), Toast.LENGTH_SHORT).show()
                         navController.popBackStack()
                     }
-                    else Toast.makeText(context, "Not saved. Fill some field first", Toast.LENGTH_SHORT).show()
+                    else Toast.makeText(context, context.getText(R.string.not_saved), Toast.LENGTH_SHORT).show()
                 },
                 onTextClick = {
                     viewModel.selectDateTime(context)
-                }
+                },
+                context = context
             )
         }
     }

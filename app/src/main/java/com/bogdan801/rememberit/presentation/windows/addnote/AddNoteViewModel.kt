@@ -107,8 +107,3 @@ constructor(
         } else false
     }
 }
-
-enum class TextType{
-    TITLE,
-    CONTENTS
-}

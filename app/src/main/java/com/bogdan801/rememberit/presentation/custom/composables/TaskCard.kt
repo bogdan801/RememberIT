@@ -13,8 +13,10 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.bogdan801.rememberit.R
 import com.bogdan801.rememberit.ui.theme.*
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
@@ -34,8 +36,6 @@ fun TaskCard(
 ){
     val currentDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
     val dueToColor = if(currentDateTime>dueToDateTime) MaterialTheme.colors.error else MaterialTheme.colors.primaryVariant
-
-    //val isDone = remember {mutableStateOf(done)}
 
     val primary = MaterialTheme.colors.primary
     val onBackground = MaterialTheme.colors.onBackground
@@ -77,7 +77,7 @@ fun TaskCard(
 
                 //due to date time
                 Text(
-                    text = "Due to:",
+                    text = stringResource(id = R.string.due_to),
                     modifier = Modifier
                         .align(Alignment.TopStart)
                         .padding(8.dp),

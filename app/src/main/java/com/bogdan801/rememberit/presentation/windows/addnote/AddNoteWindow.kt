@@ -20,10 +20,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.bogdan801.rememberit.R
 import com.bogdan801.rememberit.presentation.custom.composables.BottomSaveBar
 import com.bogdan801.rememberit.presentation.custom.composables.TopAppBar
 import com.bogdan801.rememberit.ui.theme.Typography
@@ -45,7 +47,7 @@ fun AddNoteWindow(
         .background(MaterialTheme.colors.background)
     ) {
         TopAppBar(
-            title = if(selectedNoteId == -1) "Creating note" else "Editing note",
+            title = if(selectedNoteId == -1) stringResource(id = R.string.creating_note) else stringResource(id = R.string.editing_note),
             onBackClick = {
                 navController.popBackStack()
             },
@@ -95,7 +97,7 @@ fun AddNoteWindow(
                             unfocusedIndicatorColor = Color.Transparent
                         ),
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Default),
-                        placeholder = { Text(text = "Title...", style = Typography.h1)}
+                        placeholder = { Text(text = stringResource(id = R.string.title_placeholder), style = Typography.h1)}
                     )
 
                     TextField(
@@ -118,21 +120,22 @@ fun AddNoteWindow(
                             unfocusedIndicatorColor = Color.Transparent
                         ),
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Default),
-                        placeholder = { Text(text = "Note...", style = Typography.h4)}
+                        placeholder = { Text(text = stringResource(id = R.string.note_placeholder), style = Typography.h4)}
                     )
                 }
             }
 
             BottomSaveBar(
                 modifier = Modifier.align(Alignment.BottomCenter),
-                text = viewModel.currentDateTime.toHumanReadableString(),
+                text = viewModel.currentDateTime.toHumanReadableString(context),
                 onSaveClick = {
                     if(viewModel.saveNoteClick()){
-                        Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getText(R.string.saved), Toast.LENGTH_SHORT).show()
                         navController.popBackStack()
                     }
-                    else Toast.makeText(context, "Not saved. Fill some field first", Toast.LENGTH_SHORT).show()
-                }
+                    else Toast.makeText(context, context.getText(R.string.not_saved), Toast.LENGTH_SHORT).show()
+                },
+                context = context
             )
         }
     }

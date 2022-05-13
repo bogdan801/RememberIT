@@ -1,5 +1,6 @@
 package com.bogdan801.rememberit.presentation.custom.composables
 
+import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -12,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.bogdan801.rememberit.R
 import com.bogdan801.rememberit.ui.theme.Typography
 
 @Composable
@@ -19,7 +21,8 @@ fun BottomSaveBar(
     modifier: Modifier = Modifier,
     text: String = "",
     onSaveClick: () -> Unit = {},
-    onTextClick: () -> Unit = {}
+    onTextClick: () -> Unit = {},
+    context: Context
 ) {
     Card(
         modifier = modifier
@@ -63,14 +66,8 @@ fun BottomSaveBar(
                 ),
                 shape = CircleShape
             ) {
-                Text(text = "SAVE", style = Typography.button)
+                Text(text = context.getString(R.string.save), style = Typography.button)
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun BottomSaveBarPreview() {
-    BottomSaveBar(text = "14 April 2022 16:50")
 }
