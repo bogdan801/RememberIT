@@ -68,13 +68,11 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
+    def accompanist_version = "0.24.8-beta"
     //pager
-    def pager_version = "0.18.0"
-    implementation "com.google.accompanist:accompanist-pager:$pager_version"
-
+    implementation "com.google.accompanist:accompanist-pager:$accompanist_version"
     //system UI controller
-    def systemuicontroller_version = "0.17.0"
-    implementation "com.google.accompanist:accompanist-systemuicontroller:$systemuicontroller_version"
+    implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
 
     //dagger-hilt
     def hilt_version = "2.38.1"

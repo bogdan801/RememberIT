@@ -53,7 +53,7 @@ fun NotesWindow(
     val scope = rememberCoroutineScope()
 
     //current tab state
-    val pageState = rememberPagerState(pageCount = 2)
+    val pageState = rememberPagerState()
 
     //navigation tabs color states
     val secondary = MaterialTheme.colors.secondary
@@ -167,6 +167,7 @@ fun NotesWindow(
                 }
         ){
             HorizontalPager(
+                count = 2,
                 modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.Top,
                 state = pageState
