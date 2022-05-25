@@ -20,6 +20,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+/**
+ * Пошукове поле
+ */
 //Search bar composable function
 @Composable
 fun SearchBar(

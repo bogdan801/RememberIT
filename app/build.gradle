@@ -4,7 +4,8 @@ plugins {
     //dagger hilt
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
-
+    //dokka
+    id "org.jetbrains.dokka"
 }
 
 android {

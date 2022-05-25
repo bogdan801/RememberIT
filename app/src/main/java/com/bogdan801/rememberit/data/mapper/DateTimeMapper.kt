@@ -5,8 +5,14 @@ import com.bogdan801.rememberit.R
 import kotlinx.datetime.*
 import java.time.Month
 
+/**
+ * Функція для конвертування LocalDateTime в String
+ */
 fun LocalDateTime.toFormattedString(): String = this.toInstant(TimeZone.currentSystemDefault()).toString()
 
+/**
+ * Функція для конвертування LocalDateTime в строку для відображення в UI
+ */
 fun LocalDateTime.toHumanReadableString(context: Context): String {
     val monthName = when(this.month){
         Month.JANUARY -> context.getText(R.string.jan)
@@ -26,4 +32,7 @@ fun LocalDateTime.toHumanReadableString(context: Context): String {
     return "${this.dayOfMonth} $monthName ${this.year} ${"%02d".format(this.hour)}:${"%02d".format(this.minute)}"
 }
 
+/**
+ * Функція для конвертування String в LocalDateTime
+ */
 fun String.toLocalDateTime(): LocalDateTime = Instant.parse(this).toLocalDateTime(TimeZone.currentSystemDefault())

@@ -14,6 +14,9 @@ import androidx.compose.ui.unit.dp
 import com.bogdan801.rememberit.ui.theme.Typography
 import kotlinx.datetime.LocalDateTime
 
+/**
+ * Картка нотатки
+ */
 @Composable
 fun NoteCard(
     modifier: Modifier = Modifier,

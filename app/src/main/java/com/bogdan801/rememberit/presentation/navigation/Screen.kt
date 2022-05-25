@@ -1,5 +1,8 @@
 package com.bogdan801.rememberit.presentation.navigation
 
+/**
+ * Закритий дороміжний клас для створення шляху до потрібних вікон
+ */
 sealed class Screen(val route: String) {
     object NotesScreen    : Screen("notes"   )
     object AddNoteScreen  : Screen("addnote" )

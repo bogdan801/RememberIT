@@ -5,8 +5,14 @@ import com.bogdan801.rememberit.data.localdb.TaskEntity
 import com.bogdan801.rememberit.domain.model.Note
 import com.bogdan801.rememberit.domain.model.Task
 
+/**
+ * Фкнкції конвертування NoteEntity в Note і навпаки
+ */
 fun NoteEntity.toNote(): Note = Note(id = id ?: 0, title = title, contents = contents, dateTime = dateTime.toLocalDateTime())
-fun Note.toNoteEntity(): NoteEntity = NoteEntity(title = title, contents = contents, dateTime = dateTime.toFormattedString())
+fun Note.toNoteEntity(): NoteEntity = NoteEntity(id = id, title = title, contents = contents, dateTime = dateTime.toFormattedString())
 
+/**
+ * Фкнкції конвертування TaskEntity в Task і навпаки
+ */
 fun TaskEntity.toTask(): Task = Task(id = id ?: 0, contents = contents, dueTo = dueTo.toLocalDateTime(), isChecked = isChecked)
-fun Task.toTaskEntity(): TaskEntity = TaskEntity(contents = contents, dueTo = dueTo.toFormattedString(), isChecked = isChecked)
+fun Task.toTaskEntity(): TaskEntity = TaskEntity(id = id, contents = contents, dueTo = dueTo.toFormattedString(), isChecked = isChecked)

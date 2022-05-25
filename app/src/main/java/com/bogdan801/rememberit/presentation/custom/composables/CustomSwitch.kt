@@ -18,6 +18,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+/**
+ * Спеціально створений перемикач
+ */
 @Composable
 fun CustomSwitch(
     modifier: Modifier = Modifier,

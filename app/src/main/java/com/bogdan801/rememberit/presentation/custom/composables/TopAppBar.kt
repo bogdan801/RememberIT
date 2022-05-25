@@ -17,6 +17,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bogdan801.rememberit.ui.theme.Typography
 
+/**
+ * Верхня панель додатку
+ */
 @Composable
 fun TopAppBar(
     modifier: Modifier = Modifier,
@@ -106,11 +109,4 @@ fun TopAppBar(
             }
         }
     }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun TopAppBarPreview() {
-    TopAppBar(title = "Create note")
 }

@@ -10,7 +10,11 @@ import com.bogdan801.rememberit.domain.model.Note
 import com.bogdan801.rememberit.domain.model.Task
 import com.bogdan801.rememberit.domain.repository.Repository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.runBlocking
 
+/**
+ * Ексземпляр репозиторію
+ */
 class RepositoryImpl(
     private val dbDao: Dao
 ) : Repository {
@@ -65,5 +69,21 @@ class RepositoryImpl(
     override suspend fun deleteAll() {
         dbDao.deleteNotes()
         dbDao.deleteTasks()
+    }
+
+    override fun getMaxNoteId(): Int? {
+        var id: Int? = null
+        runBlocking {
+            id = dbDao.getMaxNoteId()
+        }
+        return id
+    }
+
+    override fun getMaxTaskId(): Int? {
+        var id: Int? = null
+        runBlocking {
+            id = dbDao.getMaxTaskId()
+        }
+        return id
     }
 }

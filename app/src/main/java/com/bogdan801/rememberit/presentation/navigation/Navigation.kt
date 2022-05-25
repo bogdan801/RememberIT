@@ -17,6 +17,9 @@ import com.bogdan801.rememberit.presentation.windows.settings.SettingsWindow
 import com.bogdan801.rememberit.ui.theme.ColorTheme
 import com.google.accompanist.systemuicontroller.SystemUiController
 
+/**
+ * Функція управління навігацією додатку
+ */
 @Composable
 fun Navigation(
     navController: NavHostController,

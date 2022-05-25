@@ -13,6 +13,10 @@ buildscript {
         //dagger hilt
         def hilt = "2.38.1"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt"
+
+        //dokka
+        def dokka = "1.6.21"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka"
     }
 }
 

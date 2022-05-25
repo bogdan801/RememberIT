@@ -18,23 +18,40 @@ import kotlinx.datetime.TimeZone
 import java.util.*
 import javax.inject.Inject
 
+/**
+ * Це клас [AddTaskViewModel], являє собою ViewModel для вікна додавання/редагування завдання
+ * @constructor в конструктор передається репозиторій
+ * @param repository репозиторій, клас через методи якого надається доступ до локальної бази даних
+ * @property editID індекс завдання для редагування, якщо він рівний -1, то буде створене нове завдання, якщо ж ні,
+ * то при збереженні буде відредаговане завдання під цим індексом
+ * @property contentsUndoStack стак збереження і управління змінами вмісту завдання(undo/redo функціонал)
+ * @property undoShowState стан активності кнопки Undo
+ * @property redoShowState стан активності кнопки Redo
+ * @property tasksContentsTextState стан тексту вмісту завдання
+ * @property dueToDateTimeState стан дати і часу завдання
+ */
 @HiltViewModel
 class AddTaskViewModel
 @Inject
 constructor(
     private val repository: Repository
 ) : ViewModel() {
-    private var editID = -1
+    private var taskID: Int = repository.getMaxTaskId()?.plus(1) ?: 1
+    //private var editID = -1
 
+    /**
+     * Метод ініціалізації ViewModel для редагування завдання
+     * @param editId id завдання для редагування
+     */
     fun initEditId(editId: Int){
-        if(editId != -1 && editId != editID){
-            editID = editId
+        if(editId != -1 && editId != taskID){
+            taskID = editId
 
             viewModelScope.launch {
-                val task: Task = repository.getTaskById(editID).toTask()
+                val task: Task = repository.getTaskById(taskID).toTask()
                 _tasksContentsTextState.value = task.contents
                 contentsUndoStack = UndoRedoStack<String>().pushDefault(task.contents)
-                dueToDateTime.value = task.dueTo
+                dueToDateTimeState.value = task.dueTo
             }
 
         }
@@ -49,31 +66,53 @@ constructor(
     private var _redoShowState = mutableStateOf(false)
     val redoShowState: State<Boolean> = _redoShowState
 
-    fun undoClicked(){
-        _tasksContentsTextState.value = contentsUndoStack.undo().toString()
+    /**
+     * Метод оновлення станів кнопок Undo/Redo
+     */
+    private fun updateUndoRedoStates(){
         _undoShowState.value = contentsUndoStack.isUndoActive
         _redoShowState.value = contentsUndoStack.isRedoActive
     }
 
+    /**
+     * Метод натиску на кнопку Redo
+     */
+    fun undoClicked(){
+        _tasksContentsTextState.value = contentsUndoStack.undo().toString()
+        updateUndoRedoStates()
+        saveTaskClick()
+    }
+
+    /**
+     * Метод натиску на кнопку Redo
+     */
     fun redoClicked(){
         _tasksContentsTextState.value = contentsUndoStack.redo().toString()
-        _undoShowState.value = contentsUndoStack.isUndoActive
-        _redoShowState.value = contentsUndoStack.isRedoActive
+        updateUndoRedoStates()
+        saveTaskClick()
     }
 
     //contents
     private val _tasksContentsTextState = mutableStateOf("")
     val tasksContentsTextState: State<String> = _tasksContentsTextState
+    /**
+     * Метод зміни тексту вмісту [tasksContentsTextState] завдання
+     * @param newText новий текст вмісту
+     */
     fun tasksContentsTextChanged(newText: String){
         _tasksContentsTextState.value = newText
         contentsUndoStack.pushValue(newText)
-        _undoShowState.value = contentsUndoStack.isUndoActive
-        _redoShowState.value = contentsUndoStack.isRedoActive
+        updateUndoRedoStates()
+        saveTaskClick()
     }
 
     //datetime
-    var dueToDateTime = mutableStateOf(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()))
+    var dueToDateTimeState = mutableStateOf(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()))
 
+    /**
+     * Метод вибору дати і часу
+     * @param context контекст додатку, потрібен для локалізації назв місяців
+     */
     fun selectDateTime(context: Context) {
         val currentDateTime = Calendar.getInstance()
         val startYear = currentDateTime.get(Calendar.YEAR)
@@ -84,34 +123,29 @@ constructor(
 
         DatePickerDialog(context, { _, year, month, day ->
             TimePickerDialog(context, { _, hour, minute ->
-                dueToDateTime.value = LocalDateTime(year = year, month = Month(month+1), dayOfMonth = day, hour = hour, minute = minute)
+                dueToDateTimeState.value = LocalDateTime(year = year, month = Month(month+1), dayOfMonth = day, hour = hour, minute = minute)
+                saveTaskClick()
             }, startHour, startMinute, false).show()
         }, startYear, startMonth, startDay).show()
+
     }
 
     //save
+    /**
+     * Метод збереження завдання
+     * @return чи збереження успішне
+     */
     fun saveTaskClick(): Boolean{
         return if (tasksContentsTextState.value.isNotBlank()){
             viewModelScope.launch {
-                if(editID == -1){
-                    repository.insertTask(
-                        Task(
-                            contents = _tasksContentsTextState.value,
-                            dueTo = dueToDateTime.value,
-                            isChecked = false
-                        )
+                repository.insertTask(
+                    Task(
+                        id = taskID,
+                        contents = _tasksContentsTextState.value,
+                        dueTo = dueToDateTimeState.value,
+                        isChecked = false
                     )
-                }
-                else{
-                    repository.updateTask(
-                        Task(
-                            id = editID,
-                            contents = _tasksContentsTextState.value,
-                            dueTo = dueToDateTime.value,
-                            isChecked = false
-                        )
-                    )
-                }
+                )
             }
             true
         } else false

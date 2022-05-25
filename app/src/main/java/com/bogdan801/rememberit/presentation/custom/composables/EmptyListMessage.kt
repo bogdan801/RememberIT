@@ -15,6 +15,9 @@ import androidx.compose.ui.unit.dp
 import com.bogdan801.rememberit.R
 import com.bogdan801.rememberit.ui.theme.RememberITTheme
 
+/**
+ * Картка повідомлення про пустий список
+ */
 @Composable
 fun EmptyListMessage(
     modifier: Modifier = Modifier,
@@ -42,15 +45,5 @@ fun EmptyListMessage(
 
             Text(text = text, color = MaterialTheme.colors.onSurface)
         }
-    }
-}
-
-
-
-@Preview(showBackground = true)
-@Composable
-fun EmptyListMessagePreview() {
-    RememberITTheme {
-        EmptyListMessage(text = "There's no notes to show")
     }
 }

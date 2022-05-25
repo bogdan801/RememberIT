@@ -3,7 +3,7 @@ package com.bogdan801.rememberit.presentation.windows.notes
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bogdan801.rememberit.BaseApplication
+import com.bogdan801.rememberit.di.BaseApplication
 import com.bogdan801.rememberit.R
 import com.bogdan801.rememberit.data.mapper.toNote
 import com.bogdan801.rememberit.data.mapper.toTask
@@ -14,6 +14,18 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * Це клас [NotesViewModel], являє собою ViewModel для головного вікна
+ * @constructor в конструктор передаються репозиторій та BaseApplication
+ * @param repository репозиторій, клас через методи якого надається доступ до локальної бази даних
+ * @param application базовий клас додатку
+ * @property searchBarTextState стан вмісту строки пошуку
+ * @property searchPlaceholderState стан заповнювача пустої строки пошуку
+ * @property allNotesState стан списку всіх нотаток
+ * @property foundNotesState стан списку останніх знайдених нотаток
+ * @property allTasksState стан списку всіх завдань
+ * @property foundTasksState стан списку останніх знайдених завдань
+ */
 @HiltViewModel
 class NotesViewModel
 @Inject
@@ -27,6 +39,11 @@ constructor(
     var searchBarTextState: State<String> = _searchBarTextState
     var searchPlaceholderState: State<String> = _searchPlaceholderState
 
+    /**
+     * Метод зміни значення тексту поля строки пошуку[searchBarTextState]
+     * @param newText новий текст пошукового поля
+     * @param pageState індекс відкритої сторінки
+     */
     fun searchBarValueChanged(newText: String, pageState: Int){
         _searchBarTextState.value = newText
         if(pageState == 0){
@@ -42,6 +59,10 @@ constructor(
         }
     }
 
+    /**
+     * Метод для встановлення тексту заповнювача [searchPlaceholderState] пустої строки пошушу
+     * @param pageState індекс відкритої сторінки
+     */
     fun setPlaceholder(pageState: Int){
         _searchPlaceholderState.value = if (pageState == 0) application.getString(R.string.search_notes) else application.getString(R.string.search_tasks)
     }
@@ -51,14 +72,32 @@ constructor(
     private val _foundNotesState = mutableStateOf(listOf<Note>())
     var allNotesState: State<List<Note>> = _allNotesState
     var foundNotesState: State<List<Note>> = _foundNotesState
-
+    private lateinit var lastDeletedNote: Note
+    /**
+     * Метод натиску кнопки видалення нотатки
+     * @param id індекс обраної нотатки
+     */
     fun noteDeleteClick(id :Int){
         viewModelScope.launch {
+            lastDeletedNote = repository.getNoteById(id).toNote()
             repository.deleteNote(id)
+
+            if(_searchBarTextState.value.isNotBlank()){
+                _foundNotesState.value = repository.searchNotes(_searchBarTextState.value).map { it.toNote() }
+            }
         }
 
-        if(_searchBarTextState.value.isNotBlank()){
-            viewModelScope.launch {
+
+    }
+
+    /**
+     * Method for recovering last deleted note
+     */
+    fun recoverNoteClick(){
+        viewModelScope.launch {
+            repository.insertNote(lastDeletedNote)
+
+            if(_searchBarTextState.value.isNotBlank()){
                 _foundNotesState.value = repository.searchNotes(_searchBarTextState.value).map { it.toNote() }
             }
         }
@@ -69,19 +108,43 @@ constructor(
     private val _foundTasksState = mutableStateOf(listOf<Task>())
     var allTasksState: State<List<Task>> = _allTasksState
     var foundTasksState: State<List<Task>> = _foundTasksState
+    private lateinit var lastDeletedTask: Task
 
+    /**
+     * Метод натиску кнопки видалення завдання
+     * @param id індекс обраного завдання
+     */
     fun taskDeleteClick(id :Int){
         viewModelScope.launch {
+            lastDeletedTask = repository.getTaskById(id).toTask()
             repository.deleteTask(id)
+
+            if(_searchBarTextState.value.isNotBlank()){
+                _foundTasksState.value = repository.searchTasks(_searchBarTextState.value).map { it.toTask() }
+            }
         }
 
-        if(_searchBarTextState.value.isNotBlank()){
-            viewModelScope.launch {
+
+    }
+
+    /**
+     * Method for recovering last deleted task
+     */
+    fun recoverTaskClick(){
+        viewModelScope.launch {
+            repository.insertTask(lastDeletedTask)
+
+            if(_searchBarTextState.value.isNotBlank()){
                 _foundTasksState.value = repository.searchTasks(_searchBarTextState.value).map { it.toTask() }
             }
         }
     }
 
+    /**
+     * Метод натиску галочки виконання завдання
+     * @param id індекс обраного завдання
+     * @param status статус виконання завдання
+     */
     fun taskCheckedChanged(id :Int, status: Boolean){
         viewModelScope.launch {
             repository.updateTaskStatus(id, status)
@@ -95,6 +158,9 @@ constructor(
     }
 
     //on viewmodel initialization
+    /**
+     * Блок ініціалізації ViewModel
+     */
     init {
         viewModelScope.launch {
             repository.getNotes().collect{ dbList ->

@@ -18,6 +18,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.bogdan801.rememberit.ui.theme.*
 
+/**
+ * Іконка відображення кольорової теми
+ */
 @Composable
 fun ColorThemeTile(
     modifier: Modifier = Modifier,

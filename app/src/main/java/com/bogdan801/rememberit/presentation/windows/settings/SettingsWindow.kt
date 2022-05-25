@@ -26,6 +26,13 @@ import com.bogdan801.rememberit.ui.theme.RememberITTheme
 import com.bogdan801.rememberit.ui.theme.Typography
 import kotlinx.coroutines.launch
 
+/**
+ * Це фронтенд вікна налаштувань
+ * @param navController навігаційний контролер
+ * @param viewModel ViewModel для даного вікна
+ * @param darkThemeState стан нічного режиму
+ * @param colorThemeState стан кольорової теми
+ */
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun SettingsWindow(

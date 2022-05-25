@@ -1,23 +1,32 @@
 package com.bogdan801.rememberit.presentation.windows.util
 
-class UndoRedoStack<T>(private val limit: Int = 0) {
+/**
+ * Це клас UndoRedoStack, використовується для зберення даних поля і реалізації [undo]/[redo] функціоналу для даного поля
+ * @param T тип даних для збереження
+ * @property stack список для збереження внесених даних
+ * @property currentIndex вказівник на елемент для відображення
+ * @property isUndoActive вказує чи можна дозволяти виконувати undo
+ * @property isRedoActive вказує чи можна дозволяти виконувати redo
+ * @property size вказує на розмір стаку
+ */
+class UndoRedoStack<T> {
     private val stack: MutableList<T> = mutableListOf()
     private var currentIndex: Int = -1
 
     val isUndoActive
-        get() = currentIndex>limit
+        get() = currentIndex>0
 
     val isRedoActive
         get() = stack.lastIndex > currentIndex
 
-    val isEmpty
-        get() = stack.isEmpty()
-
-    val isNotEmpty
-        get() = stack.isNotEmpty()
-
     val size get() = stack.size
 
+    /**
+     * Це метод [pushValue], використовується для додавання нових значень на верх стаку.
+     * Якщо вказівник [currentIndex] не на останньому індексі то всі значення після нього стираються і нове значення додається на їх місце
+     * @param value значення що потрібно додати в стак
+     * @return додане в стак значення
+     */
     fun pushValue(value: T): T{
         if (stack.isNotEmpty() && currentIndex < stack.lastIndex){
             for (i in 0 until stack.lastIndex-currentIndex){
@@ -29,37 +38,45 @@ class UndoRedoStack<T>(private val limit: Int = 0) {
         return stack[currentIndex]
     }
 
+    /**
+     * Це метод [pushDefault], використовується для додавання значення за замовчуванням в стак
+     * @param value значення за замовчуванням для додавання в стак
+     * @return екземпляр класу UndoRedoStack з доданим значенням за замовчуванням
+     */
     fun pushDefault(value: T): UndoRedoStack<T>{
         pushValue(value)
         return this
     }
 
-    fun topValue() = stack.last()
-
+    /**
+     * Це метод [undo]. Повертає попереднє значення в стаку
+     * @return попереднє значення в стаку
+     */
     fun undo(): T?{
-        return if(isUndoActive){
+        return if(isUndoActive) {
             currentIndex--
-            val element = if(stack.size>1) stack[currentIndex] else null
-            element
+            stack[currentIndex]
         } else null
     }
-    fun getTopAndUndo(): T{
-        val top = topValue()
-        undo()
-        return top
-    }
 
+    /**
+     * Це метод [redo]. Повертає наступне значення в стаку
+     * @return наступне значення в стаку
+     */
     fun redo(): T?{
-        return if(currentIndex < stack.lastIndex){
+        return if(isRedoActive) {
             currentIndex++
-            val element = stack[currentIndex]
-            element
+            stack[currentIndex]
         } else null
     }
 
+    /**
+     * Це метод для опису даного класу строкою
+     * @return строковий опис даного класу
+     */
     override fun toString(): String {
         return buildString {
-            append("Size: $size;\t")
+            append("Size: ${stack.size};\t")
             append("Current index: $currentIndex;\t")
             append("Can undo: $isUndoActive;\t")
             append("Can redo: $isRedoActive;\t")

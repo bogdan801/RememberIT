@@ -31,6 +31,11 @@ import com.bogdan801.rememberit.presentation.custom.composables.BottomSaveBar
 import com.bogdan801.rememberit.presentation.custom.composables.TopAppBar
 import com.bogdan801.rememberit.ui.theme.Typography
 
+/**
+ * Це фронтенд вікна додавання/редагування завдань
+ * @param navController навігаційний контролер
+ * @param viewModel ViewModel для даного вікна
+ */
 @Composable
 fun AddTaskWindow(
     navController: NavHostController,
@@ -103,7 +108,7 @@ fun AddTaskWindow(
 
             BottomSaveBar(
                 modifier = Modifier.align(Alignment.BottomCenter),
-                text = "${stringResource(id = R.string.due_to)}\n${viewModel.dueToDateTime.value.toHumanReadableString(context)}",
+                text = "${stringResource(id = R.string.due_to)}\n${viewModel.dueToDateTimeState.value.toHumanReadableString(context)}",
                 onSaveClick = {
                     if(viewModel.saveTaskClick()){
                         Toast.makeText(context, context.getText(R.string.saved), Toast.LENGTH_SHORT).show()

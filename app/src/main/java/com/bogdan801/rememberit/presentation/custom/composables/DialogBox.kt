@@ -7,6 +7,9 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.unit.dp
 import com.bogdan801.rememberit.ui.theme.Typography
 
+/**
+ * Діалогове вікно
+ */
 @Composable
 fun DialogBox(
     showDialogState: MutableState<Boolean>,

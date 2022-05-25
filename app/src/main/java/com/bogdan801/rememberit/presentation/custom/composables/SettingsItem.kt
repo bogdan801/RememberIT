@@ -18,6 +18,9 @@ import androidx.compose.ui.unit.sp
 import com.bogdan801.rememberit.ui.theme.RememberITTheme
 import com.bogdan801.rememberit.ui.theme.Typography
 
+/**
+ * Елемент налаштувань
+ */
 @Composable
 fun SettingsItem(
     modifier: Modifier = Modifier,

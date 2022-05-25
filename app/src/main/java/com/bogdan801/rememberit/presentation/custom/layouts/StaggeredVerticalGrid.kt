@@ -4,6 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 
+/**
+ * Сеціально створений лейаут сітки для нотаток
+ */
 @Composable
 fun StaggeredVerticalGrid(
     modifier: Modifier = Modifier,

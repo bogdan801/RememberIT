@@ -15,6 +15,9 @@ import androidx.compose.ui.unit.sp
 import com.bogdan801.rememberit.ui.theme.RememberITTheme
 import com.bogdan801.rememberit.ui.theme.Typography
 
+/**
+ * Піделемент налаштувань
+ */
 @Composable
 fun SettingsSubitem(
     modifier: Modifier = Modifier,

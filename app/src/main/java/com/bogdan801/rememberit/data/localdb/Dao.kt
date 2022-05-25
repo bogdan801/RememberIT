@@ -6,6 +6,9 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Об'єкт доступу до даних бази даних
+ */
 @Dao
 interface Dao {
     //insert
@@ -65,4 +68,10 @@ interface Dao {
 
     @Query("SELECT * FROM taskentity WHERE id = :id")
     suspend fun getTaskByID(id: Int) : TaskEntity
+
+    @Query("SELECT MAX(id) FROM noteentity")
+    suspend fun getMaxNoteId(): Int?
+
+    @Query("SELECT MAX(id) FROM taskentity")
+    suspend fun getMaxTaskId(): Int?
 }

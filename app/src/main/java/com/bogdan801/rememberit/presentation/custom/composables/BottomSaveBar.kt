@@ -16,6 +16,9 @@ import androidx.compose.ui.unit.dp
 import com.bogdan801.rememberit.R
 import com.bogdan801.rememberit.ui.theme.Typography
 
+/**
+ * Нижня панель збереження нотаток і завдань
+ */
 @Composable
 fun BottomSaveBar(
     modifier: Modifier = Modifier,

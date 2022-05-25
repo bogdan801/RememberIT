@@ -41,4 +41,7 @@
     <string name="off">Off</string>
     <string name="color_theme">Color theme</string>
     <string name="clear_all_entries">Clear all entries</string>
+    <string name="note_has_been_deleted">Note has been deleted</string>
+    <string name="task_has_been_deleted">Task has been deleted</string>
+    <string name="undo">Undo</string>
 </resources>

@@ -42,4 +42,7 @@
     <string name="off">Вимкнено</string>
     <string name="color_theme">Кольорова тема</string>
     <string name="clear_all_entries">Видалити всі записи</string>
+    <string name="note_has_been_deleted">Нотатку було видалено</string>
+    <string name="undo">Відновити</string>
+    <string name="task_has_been_deleted">Завдання було видалено</string>
 </resources>

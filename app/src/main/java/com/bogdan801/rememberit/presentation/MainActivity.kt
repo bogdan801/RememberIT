@@ -1,4 +1,4 @@
-package com.bogdan801.rememberit
+package com.bogdan801.rememberit.presentation
 
 import android.os.Bundle
 import android.view.WindowManager
@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.*
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.navigation.compose.rememberNavController
@@ -17,6 +16,9 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
 
+/**
+ * MainActivity class, entry point for an app
+ */
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,9 +35,7 @@ class MainActivity : ComponentActivity() {
             }
 
             val defaultTheme = if(darkTheme == null) isSystemInDarkTheme() else darkTheme==1
-            val darkThemeState = remember {
-                mutableStateOf(defaultTheme)
-            }
+            val darkThemeState = remember { mutableStateOf(defaultTheme) }
 
             var defaultColorTheme = ColorTheme.Default
             if(colorTheme != null){
@@ -44,28 +44,20 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            val colorThemeState = remember {
-                mutableStateOf(defaultColorTheme)
-            }
+            val colorThemeState = remember { mutableStateOf(defaultColorTheme)}
 
             RememberITTheme(darkTheme = darkThemeState.value, colorTheme = colorThemeState.value) {
                 val systemUiController = rememberSystemUiController()
+                systemUiController.setSystemBarsColor(
+                    color = MaterialTheme.colors.background
+                )
 
-                val background = MaterialTheme.colors.background
-                SideEffect {
-                    systemUiController.setSystemBarsColor(
-                        color = background
-                    )
-                }
-
-                Surface(color = MaterialTheme.colors.background) {
-                    val navController = rememberNavController()
-                    Navigation(
-                        navController = navController,
-                        isDarkThemeState = darkThemeState,
-                        colorThemeState = colorThemeState
-                    )
-                }
+                val navController = rememberNavController()
+                Navigation(
+                    navController = navController,
+                    isDarkThemeState = darkThemeState,
+                    colorThemeState = colorThemeState
+                )
             }
         }
     }

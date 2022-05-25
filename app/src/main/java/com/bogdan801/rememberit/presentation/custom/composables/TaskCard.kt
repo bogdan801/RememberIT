@@ -23,6 +23,9 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
+/**
+ * Картка завдання
+ */
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun TaskCard(

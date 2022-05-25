@@ -15,7 +15,8 @@ private val DarkColorPalette = darkColors(
     error = RedErrorDark,
     onPrimary = Gray10,
     onBackground = Gray90,
-    onSurface = Gray50
+    onSurface = Gray50,
+    surface = Color.White
 )
 
 private val LightColorPalette = lightColors(
@@ -26,7 +27,8 @@ private val LightColorPalette = lightColors(
     error = RedError,
     onPrimary = Color.Black,
     onBackground = Gray20,
-    onSurface = Gray40
+    onSurface = Gray40,
+    surface = Gray70
 )
 
 enum class ColorTheme(val color: Color){

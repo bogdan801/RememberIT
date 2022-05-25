@@ -6,6 +6,9 @@ import com.bogdan801.rememberit.domain.model.Note
 import com.bogdan801.rememberit.domain.model.Task
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Інтерфейс репозиторію
+ */
 interface Repository {
     fun getNotes(): Flow<List<NoteEntity>>
 
@@ -34,4 +37,8 @@ interface Repository {
     suspend fun deleteTask(id: Int)
 
     suspend fun deleteAll()
+
+    fun getMaxNoteId():Int?
+
+    fun getMaxTaskId():Int?
 }
