@@ -14,15 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.bogdan801.rememberit.R
-import com.bogdan801.rememberit.data.datastore.saveToDataStore
+import com.bogdan801.rememberit.data.datastore.saveIntToDataStore
 import com.bogdan801.rememberit.presentation.custom.composables.*
 import com.bogdan801.rememberit.ui.theme.ColorTheme
-import com.bogdan801.rememberit.ui.theme.RememberITTheme
 import com.bogdan801.rememberit.ui.theme.Typography
 import kotlinx.coroutines.launch
 
@@ -98,7 +96,7 @@ fun SettingsWindow(
                 onClick = {
                     darkThemeState.value = !darkThemeState.value
                     scope.launch {
-                        context.saveToDataStore("dark_theme", if(darkThemeState.value) 1 else 0)
+                        context.saveIntToDataStore("dark_theme", if(darkThemeState.value) 1 else 0)
                     }
                 },
                 additionalContent = {
@@ -106,7 +104,7 @@ fun SettingsWindow(
                         switchState = darkThemeState,
                         onStateChange = {
                             scope.launch {
-                                context.saveToDataStore("dark_theme", if(darkThemeState.value) 1 else 0)
+                                context.saveIntToDataStore("dark_theme", if(darkThemeState.value) 1 else 0)
                             }
                         }
                     )
@@ -148,7 +146,7 @@ fun SettingsWindow(
                             onClick = {
                                 colorThemeState.value = it
                                 scope.launch {
-                                    context.saveToDataStore("color_theme", ColorTheme.values().indexOf(it))
+                                    context.saveIntToDataStore("color_theme", ColorTheme.values().indexOf(it))
                                 }
                             }
                         )

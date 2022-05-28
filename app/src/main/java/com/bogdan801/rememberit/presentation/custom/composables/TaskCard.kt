@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -103,7 +104,10 @@ fun TaskCard(
                     modifier = Modifier.align(Alignment.Center),
                     checked = done,
                     onCheckedChange = onCheckedChange,
-                    colors = CheckboxDefaults.colors(MaterialTheme.colors.secondary)
+                    colors = CheckboxDefaults.colors(
+                        checkedColor = MaterialTheme.colors.secondary,
+                        checkmarkColor = MaterialTheme.colors.primary
+                    )
                 )
 
                 //delete button

@@ -9,8 +9,9 @@ import androidx.compose.material.*
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.navigation.compose.rememberNavController
-import com.bogdan801.rememberit.data.datastore.readFromDataStore
+import com.bogdan801.rememberit.data.datastore.readIntFromDataStore
 import com.bogdan801.rememberit.presentation.navigation.Navigation
+import com.bogdan801.rememberit.domain.notifications.*
 import com.bogdan801.rememberit.ui.theme.*
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,13 +26,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
+        createNotificationChannel()
+
         setContent {
             var darkTheme: Int?
             var colorTheme: Int?
 
             runBlocking {
-                darkTheme = readFromDataStore("dark_theme")
-                colorTheme = readFromDataStore("color_theme")
+                darkTheme = readIntFromDataStore("dark_theme")
+                colorTheme = readIntFromDataStore("color_theme")
             }
 
             val defaultTheme = if(darkTheme == null) isSystemInDarkTheme() else darkTheme==1
@@ -60,5 +63,7 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
+
+
     }
 }

@@ -5,15 +5,16 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.first
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 /**
- * Функція збереження даних в DataStore
+ * Функція збереження Int даних в DataStore
  */
-suspend fun Context.saveToDataStore(key: String, value: Int) {
+suspend fun Context.saveIntToDataStore(key: String, value: Int) {
     val dataStoreKey = intPreferencesKey(key)
     dataStore.edit { settings ->
         settings[dataStoreKey] = value
@@ -21,10 +22,29 @@ suspend fun Context.saveToDataStore(key: String, value: Int) {
 }
 
 /**
- * Функція зчитування даних з DataStore
+ * Функція зчитування Int даних з DataStore
  */
-suspend fun Context.readFromDataStore(key: String): Int? {
+suspend fun Context.readIntFromDataStore(key: String): Int? {
     val dataStoreKey = intPreferencesKey(key)
+    val preferences = dataStore.data.first()
+    return preferences[dataStoreKey]
+}
+
+/**
+ * Функція збереження String даних в DataStore
+ */
+suspend fun Context.saveStringToDataStore(key: String, value: String) {
+    val dataStoreKey = stringPreferencesKey(key)
+    dataStore.edit { settings ->
+        settings[dataStoreKey] = value
+    }
+}
+
+/**
+ * Функція зчитування String даних з DataStore
+ */
+suspend fun Context.readStringFromDataStore(key: String): String? {
+    val dataStoreKey = stringPreferencesKey(key)
     val preferences = dataStore.data.first()
     return preferences[dataStoreKey]
 }

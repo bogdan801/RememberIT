@@ -1,17 +1,26 @@
 package com.bogdan801.rememberit.presentation.windows.notes
 
 import androidx.compose.runtime.*
+import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bogdan801.rememberit.di.BaseApplication
 import com.bogdan801.rememberit.R
+import com.bogdan801.rememberit.data.datastore.readStringFromDataStore
+import com.bogdan801.rememberit.data.datastore.saveStringToDataStore
 import com.bogdan801.rememberit.data.mapper.toNote
 import com.bogdan801.rememberit.data.mapper.toTask
 import com.bogdan801.rememberit.domain.model.Note
 import com.bogdan801.rememberit.domain.model.Task
+import com.bogdan801.rememberit.domain.notifications.cancelNotification
+import com.bogdan801.rememberit.domain.notifications.scheduleNotification
 import com.bogdan801.rememberit.domain.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import javax.inject.Inject
 
 /**
@@ -157,6 +166,45 @@ constructor(
         }
     }
 
+    /**
+     * Метод для управління сповіщеннями для завдань
+     * @param tasks список завдань
+     */
+    private suspend fun manageTaskNotifications(tasks: List<Task>){
+        //cancel all previous alarms
+        val alarmsString = application.readStringFromDataStore("alarms")
+        var alarmsIDs = listOf<Int>()
+        if(alarmsString!=null){
+            if(alarmsString.isNotBlank()){
+                alarmsIDs = alarmsString
+                    .split(" ")
+                    .filter{it.isNotBlank()}
+                    .map {it.toInt()}
+            }
+        }
+
+        alarmsIDs.forEach {
+            application.cancelNotification(it)
+        }
+
+        //set new alarms
+        var newAlarmsString = ""
+        tasks.filter { task ->
+            !task.isChecked && (task.dueTo> Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()))
+        }.forEach { task ->
+            newAlarmsString += task.id.toString() + " "
+            application.scheduleNotification(
+                notificationID = task.id,
+                title = application.getString(R.string.the_task_is_due),
+                message = task.contents,
+                time = task.dueTo.toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()
+            )
+        }
+
+        //save new alarms id list as string in Datastore
+        application.saveStringToDataStore("alarms", newAlarmsString)
+    }
+
     //on viewmodel initialization
     /**
      * Блок ініціалізації ViewModel
@@ -172,9 +220,11 @@ constructor(
 
         viewModelScope.launch {
             repository.getTasks().collect{ dbList ->
-                _allTasksState.value = dbList.map { taskEntity->
+                val tasks = dbList.map { taskEntity->
                     taskEntity.toTask()
                 }
+                _allTasksState.value = tasks
+                manageTaskNotifications(tasks)
             }
         }
     }

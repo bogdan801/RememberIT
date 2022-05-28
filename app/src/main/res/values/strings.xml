@@ -44,4 +44,6 @@
     <string name="note_has_been_deleted">Note has been deleted</string>
     <string name="task_has_been_deleted">Task has been deleted</string>
     <string name="undo">Undo</string>
+    <string name="the_task_is_due">The task is due:</string>
+
 </resources>

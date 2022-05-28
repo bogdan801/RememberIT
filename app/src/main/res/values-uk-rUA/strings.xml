@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Запам\'ятатиЦЕ</string>
+    <string name="app_name">Запам\'ятайЦЕ</string>
     <string name="notes">Нотатки</string>
     <string name="tasks">Завдання</string>
     <string name="no_notes_to_show">Немає нотаток</string>
@@ -45,4 +45,5 @@
     <string name="note_has_been_deleted">Нотатку було видалено</string>
     <string name="undo">Відновити</string>
     <string name="task_has_been_deleted">Завдання було видалено</string>
+    <string name="the_task_is_due">Час виконання завдання настав:</string>
 </resources>

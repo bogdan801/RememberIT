@@ -37,7 +37,6 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 
-
 /**
  * Це фронтенд головного вікна
  * @param navController навігаційний контролер
@@ -232,6 +231,7 @@ fun NotesWindow(
                                                     onDeleteClick = {
                                                         notesViewModel.noteDeleteClick(note.id)
                                                         scope.launch {
+                                                            scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
                                                             val result = scaffoldState.snackbarHostState.showSnackbar(
                                                                 message = context.getString(R.string.note_has_been_deleted),
                                                                 actionLabel = context.getString(R.string.undo),
@@ -261,6 +261,7 @@ fun NotesWindow(
                                                     onDeleteClick = {
                                                         notesViewModel.noteDeleteClick(note.id)
                                                         scope.launch {
+                                                            scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
                                                             val result = scaffoldState.snackbarHostState.showSnackbar(
                                                                 message = context.getString(R.string.note_has_been_deleted),
                                                                 actionLabel = context.getString(R.string.undo),
@@ -315,6 +316,7 @@ fun NotesWindow(
                                                 onDeleteClick = {
                                                     notesViewModel.taskDeleteClick(task.id)
                                                     scope.launch {
+                                                        scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
                                                         val result = scaffoldState.snackbarHostState.showSnackbar(
                                                             message = context.getString(R.string.task_has_been_deleted),
                                                             actionLabel = context.getString(R.string.undo),
@@ -347,6 +349,7 @@ fun NotesWindow(
                                                 onDeleteClick = {
                                                     notesViewModel.taskDeleteClick(task.id)
                                                     scope.launch {
+                                                        scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
                                                         val result = scaffoldState.snackbarHostState.showSnackbar(
                                                             message = context.getString(R.string.task_has_been_deleted),
                                                             actionLabel = context.getString(R.string.undo),
