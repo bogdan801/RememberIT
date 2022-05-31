@@ -6,6 +6,7 @@ val Yellow = Color(0xFFFDBE00)
 val Blue = Color(0xFF0010EE)
 val Green = Color(0xFF0ED100)
 val Violet = Color(0xFFE90DE9)
+val Red = Color(0xFFE93224)
 
 val RedError = Color(0xFFBB0000)
 val RedErrorDark = Color(0xFFC82F2F)

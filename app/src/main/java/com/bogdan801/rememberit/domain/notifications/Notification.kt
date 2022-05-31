@@ -5,6 +5,13 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 
+/**
+ * Function to schedule a notification
+ * @param notificationID id of a notification
+ * @param title of the notification
+ * @param message of the notification
+ * @param time at which notification will be sent to device
+ */
 fun Context.scheduleNotification(notificationID: Int, title: String, message: String, time: Long) {
     val intent = Intent(applicationContext, AlarmReceiver::class.java)
     intent.putExtra(titleExtra, title)
@@ -27,6 +34,10 @@ fun Context.scheduleNotification(notificationID: Int, title: String, message: St
     )
 }
 
+/**
+ * Function to cancel scheduled notification by id
+ * @param notificationID id of notification to cancel
+ */
 fun Context.cancelNotification(notificationID: Int) {
     val intent = Intent(applicationContext, AlarmReceiver::class.java)
     intent.putExtra(notificationIdExtra, notificationID)

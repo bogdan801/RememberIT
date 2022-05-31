@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.first
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 /**
- * Функція збереження Int даних в DataStore
+ * Function to save Int values to DataStore
  */
 suspend fun Context.saveIntToDataStore(key: String, value: Int) {
     val dataStoreKey = intPreferencesKey(key)
@@ -22,7 +22,7 @@ suspend fun Context.saveIntToDataStore(key: String, value: Int) {
 }
 
 /**
- * Функція зчитування Int даних з DataStore
+ * Function to read Int values from DataStore
  */
 suspend fun Context.readIntFromDataStore(key: String): Int? {
     val dataStoreKey = intPreferencesKey(key)
@@ -31,7 +31,7 @@ suspend fun Context.readIntFromDataStore(key: String): Int? {
 }
 
 /**
- * Функція збереження String даних в DataStore
+ * Function to save String values to DataStore
  */
 suspend fun Context.saveStringToDataStore(key: String, value: String) {
     val dataStoreKey = stringPreferencesKey(key)
@@ -41,7 +41,7 @@ suspend fun Context.saveStringToDataStore(key: String, value: String) {
 }
 
 /**
- * Функція зчитування String даних з DataStore
+ * Function to read String values from DataStore
  */
 suspend fun Context.readStringFromDataStore(key: String): String? {
     val dataStoreKey = stringPreferencesKey(key)

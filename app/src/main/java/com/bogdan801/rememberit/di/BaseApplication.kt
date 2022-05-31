@@ -5,7 +5,7 @@ import android.util.Log
 import dagger.hilt.android.HiltAndroidApp
 
 /**
- * Це базовий клас додатку
+ * This is base application class
  */
 @HiltAndroidApp
 class BaseApplication : Application()

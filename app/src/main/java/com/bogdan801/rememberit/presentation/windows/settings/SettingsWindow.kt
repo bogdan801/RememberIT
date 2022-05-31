@@ -1,6 +1,11 @@
 package com.bogdan801.rememberit.presentation.windows.settings
 
+import android.content.Intent
+import android.content.Intent.getIntent
+import android.util.Log
 import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedDispatcher
 import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -15,21 +20,27 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.bogdan801.rememberit.R
 import com.bogdan801.rememberit.data.datastore.saveIntToDataStore
+import com.bogdan801.rememberit.presentation.MainActivity
 import com.bogdan801.rememberit.presentation.custom.composables.*
 import com.bogdan801.rememberit.ui.theme.ColorTheme
 import com.bogdan801.rememberit.ui.theme.Typography
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+
 
 /**
- * Це фронтенд вікна налаштувань
- * @param navController навігаційний контролер
- * @param viewModel ViewModel для даного вікна
- * @param darkThemeState стан нічного режиму
- * @param colorThemeState стан кольорової теми
+ * This is settings window design
+ * @param navController navigation controller
+ * @param viewModel for current window
+ * @param darkThemeState dark mode state
+ * @param colorThemeState state of the color theme
  */
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -112,7 +123,7 @@ fun SettingsWindow(
             )
 
             //color theme settings item
-            var visible by remember { mutableStateOf(false) }
+
             SettingsItem(
                 itemIcon = {
                     Icon(
@@ -125,7 +136,7 @@ fun SettingsWindow(
                 title = stringResource(id = R.string.color_theme),
                 subtitle = colorThemeState.value.name,
                 onClick = {
-                    visible = !visible;
+                    viewModel.visible.value = !viewModel.visible.value;
                 },
                 additionalContent = {
                     ColorThemeTile(colorTheme = colorThemeState.value)
@@ -133,7 +144,7 @@ fun SettingsWindow(
             )
 
             AnimatedVisibility(
-                visible = visible
+                visible = viewModel.visible.value
             ) {
                 Column(modifier = Modifier.fillMaxWidth()) {
                     ColorTheme.values().forEach {
@@ -148,6 +159,8 @@ fun SettingsWindow(
                                 scope.launch {
                                     context.saveIntToDataStore("color_theme", ColorTheme.values().indexOf(it))
                                 }
+
+                                (context as ComponentActivity).recreate()
                             }
                         )
                     }

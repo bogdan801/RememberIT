@@ -7,7 +7,7 @@ import com.bogdan801.rememberit.domain.model.Task
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Інтерфейс репозиторію
+ * Repository interface with all the methods to access the dta from database
  */
 interface Repository {
     fun getNotes(): Flow<List<NoteEntity>>

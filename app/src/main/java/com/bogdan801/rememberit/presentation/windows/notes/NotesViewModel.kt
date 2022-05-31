@@ -24,16 +24,16 @@ import kotlinx.datetime.toLocalDateTime
 import javax.inject.Inject
 
 /**
- * Це клас [NotesViewModel], являє собою ViewModel для головного вікна
- * @constructor в конструктор передаються репозиторій та BaseApplication
- * @param repository репозиторій, клас через методи якого надається доступ до локальної бази даних
- * @param application базовий клас додатку
- * @property searchBarTextState стан вмісту строки пошуку
- * @property searchPlaceholderState стан заповнювача пустої строки пошуку
- * @property allNotesState стан списку всіх нотаток
- * @property foundNotesState стан списку останніх знайдених нотаток
- * @property allTasksState стан списку всіх завдань
- * @property foundTasksState стан списку останніх знайдених завдань
+ * This is [NotesViewModel] class, it is a ViewModel for the main window
+ * @constructor Repository and BaseApplication are being passed to the constructor
+ * @param repository class, methods of which grant access to the local database
+ * @param application base application class
+ * @property searchBarTextState state of the search bar contents
+ * @property searchPlaceholderState state of the placeholder contents
+ * @property allNotesState state of the list of notes to show
+ * @property foundNotesState state of notes that was found by searching
+ * @property allTasksState state of the list of tasks to show
+ * @property foundTasksState state of tasks that was found by searching
  */
 @HiltViewModel
 class NotesViewModel
@@ -49,9 +49,9 @@ constructor(
     var searchPlaceholderState: State<String> = _searchPlaceholderState
 
     /**
-     * Метод зміни значення тексту поля строки пошуку[searchBarTextState]
-     * @param newText новий текст пошукового поля
-     * @param pageState індекс відкритої сторінки
+     * Method of search bar text change[searchBarTextState]
+     * @param newText new search bar text
+     * @param pageState opened page index
      */
     fun searchBarValueChanged(newText: String, pageState: Int){
         _searchBarTextState.value = newText
@@ -69,8 +69,8 @@ constructor(
     }
 
     /**
-     * Метод для встановлення тексту заповнювача [searchPlaceholderState] пустої строки пошушу
-     * @param pageState індекс відкритої сторінки
+     * Method for setting the placeholder text [searchPlaceholderState] of the empty search bar
+     * @param pageState opened page index
      */
     fun setPlaceholder(pageState: Int){
         _searchPlaceholderState.value = if (pageState == 0) application.getString(R.string.search_notes) else application.getString(R.string.search_tasks)
@@ -83,8 +83,8 @@ constructor(
     var foundNotesState: State<List<Note>> = _foundNotesState
     private lateinit var lastDeletedNote: Note
     /**
-     * Метод натиску кнопки видалення нотатки
-     * @param id індекс обраної нотатки
+     * Method of pressing the delete note button
+     * @param id selected note id
      */
     fun noteDeleteClick(id :Int){
         viewModelScope.launch {
@@ -120,8 +120,8 @@ constructor(
     private lateinit var lastDeletedTask: Task
 
     /**
-     * Метод натиску кнопки видалення завдання
-     * @param id індекс обраного завдання
+     * Method of pressing the delete task button
+     * @param id selected task id
      */
     fun taskDeleteClick(id :Int){
         viewModelScope.launch {
@@ -150,9 +150,9 @@ constructor(
     }
 
     /**
-     * Метод натиску галочки виконання завдання
-     * @param id індекс обраного завдання
-     * @param status статус виконання завдання
+     * The method of pressing the check mark to perform the task
+     * @param id selected task id
+     * @param status task status
      */
     fun taskCheckedChanged(id :Int, status: Boolean){
         viewModelScope.launch {
@@ -167,8 +167,8 @@ constructor(
     }
 
     /**
-     * Метод для управління сповіщеннями для завдань
-     * @param tasks список завдань
+     * Method for managing notifications for tasks
+     * @param tasks list of tasks
      */
     private suspend fun manageTaskNotifications(tasks: List<Task>){
         //cancel all previous alarms
@@ -205,9 +205,8 @@ constructor(
         application.saveStringToDataStore("alarms", newAlarmsString)
     }
 
-    //on viewmodel initialization
     /**
-     * Блок ініціалізації ViewModel
+     * Viewmodel initialization
      */
     init {
         viewModelScope.launch {
@@ -222,6 +221,10 @@ constructor(
             repository.getTasks().collect{ dbList ->
                 val tasks = dbList.map { taskEntity->
                     taskEntity.toTask()
+                }.sortedBy { task ->
+                    task.dueTo
+                }.sortedBy { task ->
+                    task.isChecked
                 }
                 _allTasksState.value = tasks
                 manageTaskNotifications(tasks)

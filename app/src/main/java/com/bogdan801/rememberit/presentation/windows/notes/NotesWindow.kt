@@ -38,9 +38,9 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 
 /**
- * Це фронтенд головного вікна
- * @param navController навігаційний контролер
- * @param notesViewModel ViewModel для даного вікна
+ * Main window design
+ * @param navController navigation controller
+ * @param notesViewModel ViewModel for current window
  */
 @OptIn(ExperimentalPagerApi::class)
 @Composable

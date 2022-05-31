@@ -7,7 +7,7 @@ import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Об'єкт доступу до даних бази даних
+ * This is Data Access Object interface
  */
 @Dao
 interface Dao {

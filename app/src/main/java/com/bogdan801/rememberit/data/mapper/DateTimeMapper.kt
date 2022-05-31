@@ -6,12 +6,12 @@ import kotlinx.datetime.*
 import java.time.Month
 
 /**
- * Функція для конвертування LocalDateTime в String
+ * Function to convert LocalDateTime into String
  */
 fun LocalDateTime.toFormattedString(): String = this.toInstant(TimeZone.currentSystemDefault()).toString()
 
 /**
- * Функція для конвертування LocalDateTime в строку для відображення в UI
+ * Function to convert LocalDateTime into a String to show in the UI
  */
 fun LocalDateTime.toHumanReadableString(context: Context): String {
     val monthName = when(this.month){
@@ -33,6 +33,6 @@ fun LocalDateTime.toHumanReadableString(context: Context): String {
 }
 
 /**
- * Функція для конвертування String в LocalDateTime
+ * Function to convert String into LocalDateTime
  */
 fun String.toLocalDateTime(): LocalDateTime = Instant.parse(this).toLocalDateTime(TimeZone.currentSystemDefault())

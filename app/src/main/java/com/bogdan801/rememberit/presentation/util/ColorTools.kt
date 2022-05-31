@@ -4,11 +4,11 @@ import androidx.compose.ui.graphics.Color
 import com.google.android.material.math.MathUtils
 
 /**
- * Допоміжна функція для інтерполяції між двома кольорами
- * @param start початковий колір
- * @param end кінцевий колір
- * @param state стан від 0 до 1
- * @return новий колір між початковим [start] і кінцевим [end] за станом [state]
+ * Helper function for interpolating between two colors
+ * @param start start color
+ * @param end end color
+ * @param state state between 0 and 1
+ * @return new color between [start] and [end] colors at [state]
  */
 fun interpolateColor(start: Color, end: Color, state: Float): Color {
     return Color(

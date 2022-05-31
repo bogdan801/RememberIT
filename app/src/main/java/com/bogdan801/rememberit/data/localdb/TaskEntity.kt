@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 /**
- * Сутність завдання для бази даних
+ * This is a task entity
  */
 @Entity
 data class TaskEntity(

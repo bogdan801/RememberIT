@@ -3,7 +3,7 @@ package com.bogdan801.rememberit.domain.model
 import kotlinx.datetime.LocalDateTime
 
 /**
- * Модель нотатки
+ * Note model
  */
 data class Note(
     val id: Int = -1,

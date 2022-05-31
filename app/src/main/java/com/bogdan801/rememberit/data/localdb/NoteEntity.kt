@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import kotlinx.datetime.LocalDateTime
 
 /**
- * Сутність нотатки для бази даних
+ * This is a note entity
  */
 @Entity
 data class NoteEntity(

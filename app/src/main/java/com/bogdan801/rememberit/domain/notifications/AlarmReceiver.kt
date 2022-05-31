@@ -1,6 +1,5 @@
 package com.bogdan801.rememberit.domain.notifications
 
-import android.app.Notification
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
@@ -15,6 +14,9 @@ const val titleExtra = "titleExtra"
 const val messageExtra = "messageExtra"
 const val notificationIdExtra = "notificationIdExtra"
 
+/**
+ * AlarmReceiver class for receiving timed broadcasts and showing notifications
+ */
 class AlarmReceiver : BroadcastReceiver(){
     override fun onReceive(context: Context, intent: Intent) {
         val int = Intent(context, MainActivity::class.java)

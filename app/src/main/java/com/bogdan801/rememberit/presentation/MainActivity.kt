@@ -1,6 +1,7 @@
 package com.bogdan801.rememberit.presentation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -16,6 +17,9 @@ import com.bogdan801.rememberit.ui.theme.*
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
+import com.bogdan801.rememberit.R
+import kotlinx.coroutines.delay
+import kotlinx.datetime.*
 
 /**
  * MainActivity class, entry point for an app
@@ -45,6 +49,14 @@ class MainActivity : ComponentActivity() {
                 if(colorTheme in 0..ColorTheme.values().lastIndex){
                     defaultColorTheme = ColorTheme.values()[colorTheme!!]
                 }
+            }
+
+            when(colorTheme){
+                0 -> setTheme(R.style.Theme_RememberIT)
+                1 -> setTheme(R.style.BlueTheme)
+                2 -> setTheme(R.style.GreenTheme)
+                3 -> setTheme(R.style.VioletTheme)
+                4 -> setTheme(R.style.RedTheme)
             }
 
             val colorThemeState = remember { mutableStateOf(defaultColorTheme)}

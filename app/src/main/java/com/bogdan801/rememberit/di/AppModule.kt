@@ -13,13 +13,13 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 /**
- * Модуль для ін'єкції залежностей(Dependency Injection)
+ * Main module for Dependency Injection
  */
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
     /**
-     * Метод надає доступ до базового класу додатку
+     * Method that provides BaseApplication
      */
     @Singleton
     @Provides
@@ -28,7 +28,7 @@ object AppModule {
     }
 
     /**
-     * Метод надає доступ до бази даних
+     * Method that provides a database
      */
     @Singleton
     @Provides
@@ -38,13 +38,13 @@ object AppModule {
             .build()
 
     /**
-     * Метод надає доступ до об'єкту доступу до даних
+     * Method that provides a data access object
      */
     @Provides
     fun provideDao(db :Database) = db.dbDao
 
     /**
-     * Метод надає доступ до репозиторію
+     * Method that provides a Repository
      */
     @Provides
     @Singleton

@@ -7,9 +7,11 @@ import android.content.Context.NOTIFICATION_SERVICE
 import android.media.AudioAttributes
 import android.media.RingtoneManager
 
-
 const val channelID = "channel1"
 
+/**
+ * Function to create notification channel
+ */
 fun Context.createNotificationChannel() {
     val name = "RememberIT notification channel"
     val desc = "Notification channel. Якщо ти це читаєш, гарного дня)"

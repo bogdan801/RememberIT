@@ -3,6 +3,7 @@ package com.bogdan801.rememberit.presentation.windows.addtask
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -11,6 +12,8 @@ import com.bogdan801.rememberit.data.mapper.toTask
 import com.bogdan801.rememberit.domain.model.Task
 import com.bogdan801.rememberit.domain.repository.Repository
 import com.bogdan801.rememberit.presentation.windows.util.UndoRedoStack
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.datetime.*
@@ -19,16 +22,15 @@ import java.util.*
 import javax.inject.Inject
 
 /**
- * Це клас [AddTaskViewModel], являє собою ViewModel для вікна додавання/редагування завдання
- * @constructor в конструктор передається репозиторій
+ * This is [AddTaskViewModel] class, it is a ViewModel for the Add/Edit task window
+ * @constructor Repository is being passed to the constructor
  * @param repository репозиторій, клас через методи якого надається доступ до локальної бази даних
- * @property editID індекс завдання для редагування, якщо він рівний -1, то буде створене нове завдання, якщо ж ні,
- * то при збереженні буде відредаговане завдання під цим індексом
- * @property contentsUndoStack стак збереження і управління змінами вмісту завдання(undo/redo функціонал)
- * @property undoShowState стан активності кнопки Undo
- * @property redoShowState стан активності кнопки Redo
- * @property tasksContentsTextState стан тексту вмісту завдання
- * @property dueToDateTimeState стан дати і часу завдання
+ * @property taskID id of current task(ether old for editing, or new to create task)
+ * @property contentsUndoStack stack to save and manage changes to note content(undo/redo feature)
+ * @property undoShowState Undo button activity status state
+ * @property redoShowState Redo button activity status state
+ * @property tasksContentsTextState state of the text of the task content
+ * @property dueToDateTimeState date and time of the task state
  */
 @HiltViewModel
 class AddTaskViewModel
@@ -37,11 +39,10 @@ constructor(
     private val repository: Repository
 ) : ViewModel() {
     private var taskID: Int = repository.getMaxTaskId()?.plus(1) ?: 1
-    //private var editID = -1
 
     /**
-     * Метод ініціалізації ViewModel для редагування завдання
-     * @param editId id завдання для редагування
+     * ViewModel initialization method for task editing
+     * @param editId task id id for editing
      */
     fun initEditId(editId: Int){
         if(editId != -1 && editId != taskID){
@@ -67,7 +68,7 @@ constructor(
     val redoShowState: State<Boolean> = _redoShowState
 
     /**
-     * Метод оновлення станів кнопок Undo/Redo
+     * Method for updating Undo/Redo button states
      */
     private fun updateUndoRedoStates(){
         _undoShowState.value = contentsUndoStack.isUndoActive
@@ -75,7 +76,7 @@ constructor(
     }
 
     /**
-     * Метод натиску на кнопку Redo
+     * Undo click method
      */
     fun undoClicked(){
         _tasksContentsTextState.value = contentsUndoStack.undo().toString()
@@ -84,7 +85,7 @@ constructor(
     }
 
     /**
-     * Метод натиску на кнопку Redo
+     * Redo click method
      */
     fun redoClicked(){
         _tasksContentsTextState.value = contentsUndoStack.redo().toString()
@@ -96,8 +97,8 @@ constructor(
     private val _tasksContentsTextState = mutableStateOf("")
     val tasksContentsTextState: State<String> = _tasksContentsTextState
     /**
-     * Метод зміни тексту вмісту [tasksContentsTextState] завдання
-     * @param newText новий текст вмісту
+     * Method of changing the content text [tasksContentsTextState] of the task
+     * @param newText new content text
      */
     fun tasksContentsTextChanged(newText: String){
         _tasksContentsTextState.value = newText
@@ -110,8 +111,8 @@ constructor(
     var dueToDateTimeState = mutableStateOf(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()))
 
     /**
-     * Метод вибору дати і часу
-     * @param context контекст додатку, потрібен для локалізації назв місяців
+     * Method to pick data and time for a task
+     * @param context of an app
      */
     fun selectDateTime(context: Context) {
         val currentDateTime = Calendar.getInstance()
@@ -125,15 +126,14 @@ constructor(
             TimePickerDialog(context, { _, hour, minute ->
                 dueToDateTimeState.value = LocalDateTime(year = year, month = Month(month+1), dayOfMonth = day, hour = hour, minute = minute)
                 saveTaskClick()
-            }, startHour, startMinute, false).show()
+            }, startHour, startMinute, true).show()
         }, startYear, startMonth, startDay).show()
-
     }
 
     //save
     /**
-     * Метод збереження завдання
-     * @return чи збереження успішне
+     * Save task method
+     * @return has it been saved successfully
      */
     fun saveTaskClick(): Boolean{
         return if (tasksContentsTextState.value.isNotBlank()){

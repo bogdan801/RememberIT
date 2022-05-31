@@ -1,13 +1,13 @@
 package com.bogdan801.rememberit.presentation.windows.util
 
 /**
- * Це клас UndoRedoStack, використовується для зберення даних поля і реалізації [undo]/[redo] функціоналу для даного поля
- * @param T тип даних для збереження
- * @property stack список для збереження внесених даних
- * @property currentIndex вказівник на елемент для відображення
- * @property isUndoActive вказує чи можна дозволяти виконувати undo
- * @property isRedoActive вказує чи можна дозволяти виконувати redo
- * @property size вказує на розмір стаку
+ * This is the UndoRedoStack, is being used to save field value and to make [undo]/[redo] feature for this field possible
+ * @param T type of the data to save
+ * @property stack list of the saved data
+ * @property currentIndex pointer to the element to show
+ * @property isUndoActive show if the undo action is possible
+ * @property isRedoActive show if the redo action is possible
+ * @property size size of the stack
  */
 class UndoRedoStack<T> {
     private val stack: MutableList<T> = mutableListOf()
@@ -22,10 +22,9 @@ class UndoRedoStack<T> {
     val size get() = stack.size
 
     /**
-     * Це метод [pushValue], використовується для додавання нових значень на верх стаку.
-     * Якщо вказівник [currentIndex] не на останньому індексі то всі значення після нього стираються і нове значення додається на їх місце
-     * @param value значення що потрібно додати в стак
-     * @return додане в стак значення
+     * This is [pushValue] method, it is being used to add new value on top fo the stack.
+     * @param value current value to add to a stack
+     * @return added value
      */
     fun pushValue(value: T): T{
         if (stack.isNotEmpty() && currentIndex < stack.lastIndex){
@@ -39,9 +38,9 @@ class UndoRedoStack<T> {
     }
 
     /**
-     * Це метод [pushDefault], використовується для додавання значення за замовчуванням в стак
-     * @param value значення за замовчуванням для додавання в стак
-     * @return екземпляр класу UndoRedoStack з доданим значенням за замовчуванням
+     * This is [pushDefault] method, it is used to add default value to a stack
+     * @param value the value to add
+     * @return instance of the class UndoRedoStack with default value inside
      */
     fun pushDefault(value: T): UndoRedoStack<T>{
         pushValue(value)
@@ -49,8 +48,8 @@ class UndoRedoStack<T> {
     }
 
     /**
-     * Це метод [undo]. Повертає попереднє значення в стаку
-     * @return попереднє значення в стаку
+     * This is an [undo] method. It returns the previous value in the stack
+     * @return previous value in the stack
      */
     fun undo(): T?{
         return if(isUndoActive) {
@@ -60,8 +59,8 @@ class UndoRedoStack<T> {
     }
 
     /**
-     * Це метод [redo]. Повертає наступне значення в стаку
-     * @return наступне значення в стаку
+     * This is an [redo] method. It returns next value in the stack
+     * @return next value in the stack
      */
     fun redo(): T?{
         return if(isRedoActive) {
@@ -71,8 +70,8 @@ class UndoRedoStack<T> {
     }
 
     /**
-     * Це метод для опису даного класу строкою
-     * @return строковий опис даного класу
+     * This is a method for describing this class with a string
+     * @return string class description
      */
     override fun toString(): String {
         return buildString {

@@ -14,17 +14,16 @@ import kotlinx.datetime.*
 import javax.inject.Inject
 
 /**
- * Це клас [AddNoteViewModel], являє собою ViewModel для вікна додавання/редагування нотатки
- * @constructor в конструктор передається репозиторій
- * @param repository репозиторій, клас через методи якого надається доступ до локальної бази даних
- * @property noteID індекс нотатки для редагування, якщо він рівний -1, то буде створена нова нотатка, якщо ж ні,
- * то при збереженні буде відредагована нотатка під цим індексом
- * @property contentsUndoStack стак збереження і управління змінами вмісту нотатки(undo/redo функціонал)
- * @property undoShowState стан активності кнопки Undo
- * @property redoShowState стан активності кнопки Redo
- * @property notesTitleTextState стан тексту заголовкка нотатки
- * @property notesContentsTextState стан тексту вмісту нотатки
- * @property currentDateTime дата і час нотатки
+ * This is [AddNoteViewModel] class, it is a ViewModel for the Add/Edit note window
+ * @constructor Repository is being passed to the constructor
+ * @param repository class, methods of which grant access to the local database
+ * @property noteID id of current note(ether old for editing, or new to create note)
+ * @property contentsUndoStack stack to save and manage changes to note content(undo/redo feature)
+ * @property undoShowState Undo button activity status state
+ * @property redoShowState Redo button activity status state
+ * @property notesTitleTextState note title text status state
+ * @property notesContentsTextState state of the text of the note content
+ * @property currentDateTime date and time of the note
  */
 @HiltViewModel
 class AddNoteViewModel
@@ -36,8 +35,8 @@ constructor(
     private var noteID: Int = repository.getMaxNoteId()?.plus(1) ?: 1
 
     /**
-     * Метод ініціалізації ViewModel для редагування нотатки
-     * @param editId id нотатки для редагування
+     * ViewModel initialization method for note editing
+     * @param editId note id for editing
      */
     fun initEditId(editId: Int){
         if(editId != -1 && editId != noteID){
@@ -64,7 +63,7 @@ constructor(
     val redoShowState: State<Boolean> = _redoShowState
 
     /**
-     * Метод оновлення станів кнопок Undo/Redo
+     * Method for updating Undo/Redo button states
      */
     private fun updateUndoRedoStates(){
         _undoShowState.value = contentsUndoStack.isUndoActive
@@ -72,7 +71,7 @@ constructor(
     }
 
     /**
-     * Метод натиску на кнопку Undo
+     * Undo click method
      */
     fun undoClicked(){
         _notesContentsTextState.value = contentsUndoStack.undo().toString()
@@ -81,7 +80,7 @@ constructor(
     }
 
     /**
-     * Метод натиску на кнопку Redo
+     * Redo click method
      */
     fun redoClicked(){
         _notesContentsTextState.value = contentsUndoStack.redo().toString()
@@ -93,8 +92,8 @@ constructor(
     private var _notesTitleTextState = mutableStateOf("")
     val notesTitleTextState: State<String> = _notesTitleTextState
     /**
-     * Метод зміни тексту заголовку [notesTitleTextState] нотатки
-     * @param newText новий текст заголовку
+     * Method of changing the title text [notesTitleTextState] of the note
+     * @param newText new title text
      */
     fun notesTitleTextChanged(newText: String){
         _notesTitleTextState.value = newText
@@ -105,8 +104,8 @@ constructor(
     private val _notesContentsTextState = mutableStateOf("")
     val notesContentsTextState: State<String> = _notesContentsTextState
     /**
-     * Метод зміни тексту вмісту [notesContentsTextState] нотатки
-     * @param newText новий текст вмісту
+     * Method of changing the content text [notesContentsTextState] of the note
+     * @param newText new content text
      */
     fun notesContentsTextChanged(newText: String){
         _notesContentsTextState.value = newText
@@ -118,10 +117,9 @@ constructor(
     //datetime
     var currentDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 
-    //save
     /**
-     * Метод збереження нотатки
-     * @return чи збереження успішне
+     * Save note method
+     * @return has it been saved successfully
      */
     fun saveNoteClick(): Boolean{
         return if (notesTitleTextState.value.isNotBlank() || notesContentsTextState.value.isNotBlank()){

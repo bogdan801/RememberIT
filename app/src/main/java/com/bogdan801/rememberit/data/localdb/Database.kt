@@ -4,7 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 
 /**
- * Клас бези даних
+ * This is a database class
  */
 @Database(
     entities = [NoteEntity::class, TaskEntity::class],

@@ -36,7 +36,7 @@ enum class ColorTheme(val color: Color){
     Blue(com.bogdan801.rememberit.ui.theme.Blue),
     Green(com.bogdan801.rememberit.ui.theme.Green),
     Violet(com.bogdan801.rememberit.ui.theme.Violet),
-    Red(Color(0xFFE93224))
+    Red(com.bogdan801.rememberit.ui.theme.Red)
 }
 
 @Composable

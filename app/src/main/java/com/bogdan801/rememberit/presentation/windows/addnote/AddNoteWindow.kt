@@ -32,9 +32,9 @@ import com.bogdan801.rememberit.ui.theme.Typography
 import com.bogdan801.rememberit.data.mapper.toHumanReadableString
 
 /**
- * Це фронтенд вікна додавання/редагування нотаток
- * @param navController навігаційний контролер
- * @param viewModel ViewModel для даного вікна
+ * This is Add/Edit window design
+ * @param navController navigation controller
+ * @param viewModel ViewModel for current window
  */
 @Composable
 fun AddNoteWindow(

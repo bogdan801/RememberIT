@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.runBlocking
 
 /**
- * Ексземпляр репозиторію
+ * Repository instance class
  */
 class RepositoryImpl(
     private val dbDao: Dao
